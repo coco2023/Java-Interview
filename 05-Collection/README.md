@@ -1,3 +1,6 @@
+# refer
+https://www.interviewbit.com/java-collections-interview-questions/
+
 # Collection(*New) 
 
 Collection: 
@@ -262,8 +265,6 @@ hash_map.put("2","Tuesday");
 hash_map.values();
 ```
 
-## refer
-https://www.interviewbit.com/java-collections-interview-questions/
 
 
 

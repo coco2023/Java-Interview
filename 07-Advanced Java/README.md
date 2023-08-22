@@ -1,4 +1,4 @@
-MySQL(*New)
+# MySQL(*New)
 https://www.testgorilla.com/blog/mysql-interview-questions/
 
 JDBC(*New)

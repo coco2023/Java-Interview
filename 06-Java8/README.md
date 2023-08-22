@@ -1,3 +1,15 @@
+# refer
+  
+https://intellipaat.com/blog/interview-question/java-8-interview-questions/
+
+https://www.interviewbit.com/java-8-interview-questions/
+
+(*New)  stream API
+https://quescol.com/interview-preparation/java-8-interview-questions
+(*New)
+https://www.codingninjas.com/codestudio/library/stream-api-interview-questions 
+
+
 # Java 8
 Features:
 - Lambda expressions
@@ -156,19 +168,6 @@ convert an array into a stream:
 ```
 Stream.of(array).forEach(System.out::println);
 ```
-
-
-## refer
-  
-https://intellipaat.com/blog/interview-question/java-8-interview-questions/
-
-https://www.interviewbit.com/java-8-interview-questions/
-
-(*New)  stream API
-https://quescol.com/interview-preparation/java-8-interview-questions
-(*New)
-https://www.codingninjas.com/codestudio/library/stream-api-interview-questions 
-
 
 
 

@@ -1,4 +1,9 @@
+# refer:
+https://www.javainuse.com/spring/spring-security-interview-questions
 
+https://www.interviewbit.com/spring-security-interview-questions/
+
+# Spring-Security
 **Authentication and authorization**: Authentication and authorization are two vital information security processes that administrators use to protect systems and information
 - **Authentication** verifies the identity of a user or service( verifies that someone or something is who they say they are )
 - **authorization** determines their access rights ( determines a user or service's level of access ). We use authorization to give users or services permission to access some data or perform a particular action
@@ -173,11 +178,3 @@ The difference between @Secured and @PreAuthorize
     ```
 
 
-
-
-
-
-# refer:
-https://www.javainuse.com/spring/spring-security-interview-questions
-
-https://www.interviewbit.com/spring-security-interview-questions/
