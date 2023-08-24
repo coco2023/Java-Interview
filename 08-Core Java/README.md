@@ -1,12 +1,16 @@
 # Refer
-https://www.simplilearn.com/tutorials/java-tutorial/java-interview-questions
+https://www.simplilearn.com/tutorials/java-tutorial/java-interview-questions  (-52)
 
+https://www.javatpoint.com/corejava-interview-questions
 
-
-# Core Java
+# Core Java 1
 JDK:
   - JRE + loader(Java) + compiler(javac) + archiver(jar) + documentation generator (javadoc) + other tools
 ![JDK](https://media.geeksforgeeks.org/wp-content/uploads/20210218150010/JDK.png)
+
+Just-In-Time(JIT) compiler
+- used to improve the performance
+- a component of the runtime environment that improves the performance of Java™ applications by compiling bytecodes to native machine code at run time
 
 ClassLoader
   - Class loaders are responsible for loading Java classes dynamically to the JVM (Java Virtual Machine) during runtime. They're also part of the JRE (Java Runtime Environment). Therefore, the JVM doesn't need to know about the underlying files or file systems in order to run Java programs thanks to class loaders.
@@ -28,7 +32,11 @@ Memory allocation
 
 Association & Aggregation & Composition 
 - **Association**: relation between two separate classes which establishes through their Objects； one-to-one, one-to-many, many-to-one, many-to-many
-- **Aggregation**: is a collection, or the gathering of things together; “has a” relationship; aggregation is a group, body, or mass composed of many parts or individuals
+- **Aggregation**: is a collection, or the gathering of things together; “has a” relationship; aggregation is a group, body, or mass composed of many parts or individuals. 
+  - **Aggregation** implies a relationship where the child can **exist independently** of the parent
+- **Composition** implies a relationship where the child **relays and depends on** (cannot exist independent of) the parent
+- **Aggregation** and **Composition** are **subsets** of **Association** meaning they are specific cases of association
+
 
 Copy Constructor
 - to create a copy of an object such that the new object (copied) has the exact same values as the original object has
@@ -92,6 +100,55 @@ main() thread a daemon thread
 exception propagate
 - An exception is first thrown from the top of the stack and if it is not caught, it drops down the call stack to the previous method
 
+Contiguous memory locations are usually used for storing actual values in an array but not in ArrayList
+
+**Contiguous memory allocation**: is a classical memory allocation model. Here, a system assigns consecutive memory blocks (that is, memory blocks having consecutive addresses) to a process
+
+
+LinkedList V.s. Array
+- there is no resizing of an array done in the background
+![](https://journaldev.nyc3.digitaloceanspaces.com/2019/10/java-list-add-addAll.png)
+
+ ArrayList V.s. List
+ - ArrayList: a resizable array implementation in Java is called ArrayList
+
+Inheritance V.s. Composition
+- testability: A class's testability is improved through composition over inheritance
+  - If a class is comprised of another class, it is simple to create a mock object to simulate the combined class for testing purposes
+- breaking encapsulation  
+  - Inheritance has the drawback of breaking encapsulation
+
+new String() V.s. String str = ""
+- new String() create a new instance
+- The String pool may return an existing object if we build an object using the String literal syntax
+
+new obj. V.s. newInstance() 
+- both are used for object creation
+
+
+garbage collector & memory
+- **Garbage collection**: aids in identifying and removing programme objects that are no longer needed in order to release the resources they use
+- When an object in a programme cannot be reached, Garbage collection is executed with respect to that object
+- If there is not enough memory available to create new objects, a garbage collector is used to free up memory for the computer
+
+
+synchronization 
+- Multiple threads trying to access the same resources in a multi-threaded software may frequently result in unexpected and incorrect outcomes
+- so, it must be ensured through some form of synchronization that only one thread can access the resource at any given time
+
+Java thread lifecycle
+- create(new) - active(start) - blocked/watiing - time waiting - terination
+
+
+
+# Link 2
+access specifiers
+- public 
+- private
+- protected
+- default
+
+static methods & variables
 
 
 
