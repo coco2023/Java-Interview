@@ -288,5 +288,48 @@ final method V.s. abstract method
 
 https://www.javatpoint.com/corejava-interview-questions-2
 
+compile-time polymorphism V.s runtime polymorphism
+- Compile time polymorphism: 
+  - this process is executed during compile time; it is obtained through method overloading. 
+  - The term method overloading allows us to have more than one method with the same name
+  - static polymorphism or early binding
+  - **Overloading** is a way to achieve compile-time polymorphism
+- runtime polymorphism: 
+  - receives the information to call a method in runtime
+  - **Overriding** is a way to achieve runtime polymorphism
+  - we cannot achieve Runtime Polymorphism by data members: because method overriding is used to achieve runtime polymorphism and data members cannot be overridden. We can override the member functions but not the data members
+
+
+static binding V.s dynamic binding V.s. Dynamic method dispatch [refer](https://www.geeksforgeeks.org/static-vs-dynamic-binding-in-java/)
+- static binding: the type of the object is determined at compile-time
+- dynamic binding: the type of the object is determined at runtime
+
+instanceOf
+- returns either true or false
+
+Abstraction
+- a process of hiding the implementation details and showing only functionality to the user.
+- 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
