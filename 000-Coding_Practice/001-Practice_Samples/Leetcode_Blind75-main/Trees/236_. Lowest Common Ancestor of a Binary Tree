@@ -1,0 +1,60 @@
+```python
+
+## 5/24 it not figure it out the solution
+
+#key notes:
+the position of ancestor must either be the root, left hand side, right hand side or none
+
+time:o(n)
+space:o(height of the tree)
+
+class Solution:
+    def lowestCommonAncestor(self, root: 'TreeNode', p: 'TreeNode', q: 'TreeNode') -> 'TreeNode':
+        #define the constrains
+        #key-word binary tree and think of dfs
+
+        #base case
+        def dfs(node,p,q):
+            if not node:
+                return None
+
+            if node == p or node == q:
+                return node
+            
+            #example2 since node 5 is regarding the "node" when dfs(node.left,p,q)
+            left = dfs(node.left,p,q)
+            right = dfs(node.right,p,q)
+
+            if left and not right:
+                return left
+            
+            elif not left and right:
+                return right
+            
+            elif not left and not right:
+                return None
+            #by example 1
+            return node
+        
+        return dfs(root,p,q)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+```
