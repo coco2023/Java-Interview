@@ -1,0 +1,279 @@
+
+class Solution {
+          /**
+          *  20240411
+          **/ 
+          // BM61 矩阵最长递增路径
+
+          private int[][] dirs = {{0, 1}, {-1, 0}, {1, 0}, {0, -1}};
+          public int longestPath (int[][] matrix) {
+
+                    if (matrix == null || matrix.length == 0 || matrix[0].length == 0) return 0;
+
+                    int maxLen = 0;
+                    int m = matrix.length;
+                    int n = matrix[0].length;
+                    int[][] memo = new int[m][n];
+
+                    for (int i = 0; i < m; i++) {
+                              for (int j = 0; j < n; j++) {
+                                        maxLen = Math.max(maxLen, dfs(matrix, i, j, memo));
+                              }
+                    }
+
+                    return maxLen;
+          }
+
+          private int dfs (int[][] matrix, int i, int j, int[][] memo) {
+                    if (memo[i][j] != 0) return memo[i][j];
+
+                    memo[i][j] = 1;
+                    for (int[] dir : dirs) {
+                              int x = i + dir[0], y = j + dir[1];
+                              if (x >= 0 && y >= 0 && x < matrix.length && y < matrix[0].length && matrix[x][y] > matrix[i][j]) {
+                                        memo[i][j] = Math.max(memo[i][j], dfs(matrix, x, y, memo) + 1);
+                              }
+                    }
+
+                    return memo[i][j];
+          }
+
+          // BM85 验证IP地址
+          String solve(String IP) {
+
+                    //正则表达式限制0-255 且没有前缀0 四组齐全
+                    String ipv4="(([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\\.){3}([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])";
+                    Pattern ipv4_pattern = Pattern.compile(ipv4);
+
+                    //正则表达式限制出现8组，0-9a-fA-F的数，个数必须是1-4个
+                    String ipv6="([0-9a-fA-F]{1,4}\\:){7}[0-9a-fA-F]{1,4}";
+                    Pattern ipv6_pattern = Pattern.compile(ipv6);
+
+                    //调用正则匹配函数
+                    if (ipv4_pattern.matcher(IP).matches())
+                              return "IPv4";
+                    else if (ipv6_pattern.matcher(IP).matches())
+                              return "IPv6";
+                    else return "Neither";
+          }
+
+          // BM85 验证IPv4地址
+          public boolean validIpv4Address (String ip) {
+                    int n = ip.length();
+                    if (n == 0 || ip == null) return false;
+                    int count = 0;
+                    int sumVal = 0;
+                    int k = 1;
+
+                    for (int i = 0; i < n; i++) {
+                              char c = ip.charAt(i);
+                              if (c == '.') {
+                                        count++;
+                                        if (count > 3 || sumVal == 0 || sumVal > 255 || k > 3) {
+                                                  return false;
+                                        }
+                                        sumVal = 0;
+                                        k = 1;
+                              } else {
+                                        if (c == '0' && k > 1) {
+                                                  return false;
+                                        }
+
+                                        if (Integer.valueOf(String.valueOf(c))) {
+                                                  sumVal += String.valueOf(c) * Math.pow(10, k - 1);
+                                                  k++;
+                                        }
+
+                                        if (sumVal > 255 || k > 3) {
+                                                  return false;
+                                        }
+                                        
+                              }
+                    }
+
+                    return count == 3 && sumVal >= 0;
+          }
+
+          // 判断有效的ipv4地址
+          public boolean isValidIPv4(String ip) {
+                    if (ip == null || ip.length() == 0) {
+                              return false;
+                    }
+
+                    int count = 0; // 计数点的个数
+                    int num = 0; // 当前段的数值
+                    int segmentCount = 0; // IP段计数
+
+                    for (int i = 0; i < ip.length(); i++) {
+                              char c = ip.charAt(i);
+
+                              if (c == '.') {
+                              count++;
+                              if (count > 3 || segmentCount == 0) { // 段数超过3或者点前没有数字
+                                        return false;
+                              }
+                              segmentCount = 0; // 重置当前段的长度
+                              num = 0; // 重置数值
+                              } else if (c >= '0' && c <= '9') {
+                              if (num == 0 && segmentCount > 0) { // 段的第一个数字是0
+                                        return false;
+                              }
+                              num = num * 10 + (c - '0');
+                              if (num > 255) { // 数值超过255
+                                        return false;
+                              }
+                              segmentCount++;
+                              } else {
+                              return false; // 无效字符
+                              }
+                    }
+
+                    return count == 3 && segmentCount > 0; // 必须有3个点且最后一个段后有数字
+          }
+
+          // 验证有效ipv6地址
+          public boolean validIpv6Address (String ip) {
+                    if (ip == null || ip.length() == 0 || ip.length > 39 || ) {
+                              return false;
+                    }
+                    int countDot = 0;
+                    int sumLen = 0;
+
+                    for (int i = 0; i < ip.length(); i++) {
+                              char c = ip.charAt(i);
+                              if (c == ':') {    
+                                        if (countDot > 2 && sumLen == 0 || sumLen > 4) {
+                                                  return false;
+                                        }
+                                        countDot++;
+                                        sumLen = 0;
+                              } else {
+                                        if (!isValidIpElement(c)) {
+                                                  return false;
+                                        }
+                                        sumLen++;
+                                        if (sumLen > 4) {
+                                                  return false;
+                                        }
+                              }
+
+                    }
+
+                    if (sumLen == 0 || sumLen > 4 || countDot != 7) {
+                              return false;
+                    }
+                    return true;
+          }
+          
+          private boolean isValidIpElement (char c) {
+                    return (c >= '0' && c <= '9') || (c >= 'a' && c <= 'f') || (c >= 'A' && c <= 'F');
+          }
+
+          
+          // BM93 盛水最多的容器
+          public int maxArea (int[] height) {
+                    int left = 0;
+                    int right = height.length - 1;
+                    int maxArea = 0;
+
+                    while (left < right) {
+                              maxArea = Math.max(maxArea, Math.min(height[left], height[right]) * (right - left));
+
+                              if (height[left] < height[right]) {
+                                        left++;
+                              } else {
+                                        right--;
+                              }
+                    }
+                    return maxArea;
+          }
+
+
+          // BM75 编辑距离(一)
+          public int minEdit (String str1, String str2) {
+
+                    int m = str1.length();
+                    int n = str2.length();
+                    int[][] dp = new int[m + 1][n + 1];
+
+                    for (int i = 0; i <= m; i++) {
+                              dp[i][0] = i;
+                    }
+
+                    for (int j = 0; j <= n; j++) {
+                              dp[0][j] = j;
+                    }
+
+                    for (int i = 1; i <= m; i++) {
+                              for (int j = 1; j <= n; j++) {
+                                        if (str1.charAt(i - 1) == str2.charAt(j - 1)) {
+                                                  dp[i][j] = dp[i - 1][j - 1];
+                                        } else {
+                                                  dp[i][j] = Math.min(Math.min(dp[i][j - 1], dp[i - 1][j]), dp[i - 1][j - 1]) + 1;
+                                        }
+                              }
+                    }
+                    return dp[m][n];                    
+          }
+
+
+          // BM92 最长无重复子数组
+          public int maxLength (int[] arr) {
+                    HashMap<Integer, Integer> map = new HashMap<>();
+                    int maxLen = 0;
+                    
+                    for (int i = 0; i < arr.length; i++) {
+                              if (map.containsKey(arr[right])) {
+                                        left = Math.max(map.get(arr[right]) + 1, left);
+                              }
+                              map.put(arr[right], right);
+                              maxLen = Math.max(maxLen, right - left + 1);
+                    }
+                    return maxLen;
+          }
+
+          /**
+          *  20240412
+          **/
+          // BM88 判断是否为回文字符串
+
+          // BM83 字符串变形
+
+          // BM84 最长公共前缀
+
+          // BM86 大数加法
+
+          // BM42 用两个栈实现队列
+
+          // BM43 包含min函数的栈
+
+          // BM44 有效括号序列
+
+          // BM45 滑动窗口的最大值
+
+          // BM46 最小的K个数
+
+          // BM47 寻找第K大
+
+          // BM48 数据流中的中位数
+
+          // BM49 表达式求值
+
+          // BM55 没有重复项数字的全排列
+
+          // BM56 有重复项数字的全排列
+
+          // BM58 字符串的排列
+
+          // BM60 括号生成
+
+          // BM17 二分查找-I
+
+          // BM19 寻找峰值
+
+          // BM22 比较版本号
+
+          // BM20 数组中的逆序对
+
+          // BM21 旋转数组的最小数字
+}
