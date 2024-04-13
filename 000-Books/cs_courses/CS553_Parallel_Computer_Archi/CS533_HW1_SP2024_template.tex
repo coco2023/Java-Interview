@@ -1,0 +1,281 @@
+\documentclass[12pt]{exam}
+\usepackage[utf8]{inputenc}
+
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb}
+\usepackage{multicol}
+\usepackage{listings}
+\usepackage{parcolumns}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{enumitem}
+
+\definecolor{dkred}{rgb}{0.6,0,0}
+\definecolor{dkgreen}{rgb}{0,0.6,0}
+\definecolor{dkblue}{rgb}{0,0,0.6}
+\definecolor{gray}{rgb}{0.5,0.5,0.5}
+\definecolor{mauve}{rgb}{0.58,0,0.82}
+\definecolor{bke}{rgb}{1,1,1}
+\definecolor{darkorange}{rgb}{1.0, 0.55, 0.0}
+
+\lstset{
+  frame=none,
+  basicstyle=\ttfamily\linespread{0.8},
+  showstringspaces=false,
+  columns=flexible,
+  language=c++,
+  stepnumber=1,
+  breaklines=true,
+  breakatwhitespace=true,
+  tabsize=2,
+  captionpos=b,
+  xleftmargin=2em,
+  keywordstyle=\color{blue},
+  commentstyle=\color{dkgreen},
+  escapechar=|
+}
+
+\newcommand{\class}{CS 533}
+\newcommand{\term}{Spring 2024}
+\newcommand{\homeworknum}{Homework 1}
+\newcommand{\homeworkissued}{1/25/2024}
+\newcommand{\homeworkdue}{2/13/2024}
+
+\pagestyle{head}
+\firstpageheader{}{}{}
+\runningheader{\class}{\homeworknum\ - Page \thepage\ of \numpages}{Due \homeworkdue}
+\runningheadrule
+
+\begin{document}
+
+\noindent
+\begin{tabular*}{\textwidth}{l @{\extracolsep{\fill}} r @{\extracolsep{3pt}} l}
+\textbf{\class} & \textbf{Name:} & \makebox[3in]{\hrulefill}\\
+\textbf{\term} &&\\
+    \textbf{\homeworknum} &\textbf{NetID:} & \makebox[3in]{\hrulefill}\\
+\textbf{Assigned: \homeworkissued} &&\\
+\textbf{Due: \homeworkdue} &\textbf{UIN:} & \makebox[3in]{\hrulefill}\\
+\end{tabular*}\\
+\rule[2ex]{\textwidth}{2pt}
+
+\begin{center}
+    This homework contains \numpages\ pages (including this cover page) and
+    \numquestions\ questions.
+
+
+    \textbf{Please clearly print or typeset your answers. \\
+    Note: up to 10 points (out of \numpoints) may be deducted for illegible
+    submissions}
+
+    \vspace{1in}
+    Problem Breakdown\\
+    \vspace{0.5cm}
+    \addpoints
+    \gradetablestretch{2}
+    \cellwidth{2in}
+    \gradetable[v][questions]
+\end{center}
+
+\newpage
+
+
+\begin{questions}
+    \question[10] \textbf{Parallel Performance}
+
+    \begin{parts}
+        \part % <ANSWER HERE>
+        \part % <ANSWER HERE>
+    \end{parts}
+
+    \newpage
+
+    \question[12] \textbf{Cache Coherence vs. Memory Consistency}
+
+    \begin{parts}
+        \part % <ANSWER HERE>
+        \part % <ANSWER HERE>
+        \part % <ANSWER HERE>
+        \part % <ANSWER HERE>
+        \part % <ANSWER HERE>
+        \part % <ANSWER HERE>
+    \end{parts}
+
+    \newpage
+
+    \question[16] \textbf{Coherence Example}
+    % <Put your answer below, please keep columns aligned.>
+    \begin{verbatim}
+                                  Illinois (MESI)            Firefly
+                                P1  P2  P3  Cycles      P1  P2  P3  Cycles
+                                -   -   -               -   -   -
+1:  Processor 1 reads
+2:  Processor 1 writes
+3:  Processor 2 writes
+4:  Processor 1 reads
+5:  Processor 3 reads
+6:  Processor 3 writes
+7:  Processor 1 reads
+8:  Processor 3 reads
+9:  Processor 1 writes
+10: Processor 2 writes
+11: Processor 3 reads
+    \end{verbatim}
+
+    \newpage
+
+    \question[12]\textbf{Directory Coherence Protocols}
+
+    \begin{parts}
+        \part % <ANSWER HERE>
+
+        \part % <ANSWER HERE>
+
+        \part
+        \begin{subparts}
+            \subpart % <ANSWER HERE>
+            \subpart % <ANSWER HERE>
+            \subpart % <ANSWER HERE>
+            \subpart % <ANSWER HERE>
+        \end{subparts}
+
+        \part
+        \begin{subparts}
+            \subpart % <ANSWER HERE>
+            \subpart % <ANSWER HERE>
+        \end{subparts}
+    \end{parts}
+
+    \newpage
+
+    \question[8]\textbf{Sharing Patterns}
+    \begin{parts}
+        \part
+        \begin{subparts}
+            \subpart % <ANSWER HERE>
+            \subpart % <ANSWER HERE>
+            \subpart % <ANSWER HERE>
+            \subpart % <ANSWER HERE>
+        \end{subparts}
+
+        \part % <ANSWER HERE>
+
+    \end{parts}
+
+    \newpage
+
+    \question[12]\textbf{Understanding Memory Consistency}
+    \begin{parts}
+        \part % <ANSWER HERE>
+        \part % <ANSWER HERE>
+        \begin{checkboxes} % <PUT [X] BEFORE THE CHOICE>
+            \choice Whether the compiler can hoist a load above an earlier store that writes to a different address
+            \choice The number of cycles required to execute each memory instruction
+            \choice Whether the memory hierarchy can include write-back caches
+            \choice Whether the memory hierarchy can have multiple levels of caches
+            \choice Whether a processor can read its own writes before any other processor sees them
+            \choice Whether the interconnect may reorder messages
+        \end{checkboxes}
+        \part % <ANSWER HERE>
+    \end{parts}
+
+    \newpage
+
+    \question[20]\textbf{Memory Consistency Example}
+
+    \begin{parts}
+        \part % <ANSWER HERE>
+        \part % <Insert "fence" to the the code below and explain why here>
+    \end{parts}
+
+    \vspace{0.5cm}
+
+    \begin{lstlisting}[frame=tlrb]{Name}
+flag[0] = false;
+flag[1] = false;
+turn    = 0; // or 1
+    \end{lstlisting}
+    \noindent\begin{minipage}{.45\textwidth}
+        \begin{lstlisting}[frame=tlrb]{Name}
+P0:
+flag[0] = true;
+while (flag[1] == true) {
+    if (turn != 0) {
+        flag[0] = false;
+        while (turn != 0) {
+            // busy wait
+        }
+        flag[0] = true;
+    }
+}
+
+// critical section
+...
+
+// exit critical section
+turn    = 1;
+flag[0] = false;
+        \end{lstlisting}
+    \end{minipage}\hfill
+    \begin{minipage}{.45\textwidth}
+        \begin{lstlisting}[frame=tlrb]{Name}
+P1:
+flag[1] = true;
+while (flag[0] == true) {
+    if (turn != 1) {
+        flag[1] = false;
+        while (turn != 1) {
+            // busy wait
+        }
+        flag[1] = true;
+    }
+}
+
+// critical section
+...
+
+// exit critical section
+turn    = 0;
+flag[1] = false;
+        \end{lstlisting}
+    \end{minipage}
+
+    \newpage
+
+    \question[10]\textbf{Interaction of Consistency and Coherence}
+
+\begin{center}
+    a = b = 0\\
+    (a and b are initialized to zeros in all caches before code fragments
+    are executed.)
+\end{center}
+
+    \noindent\begin{minipage}{.25\textwidth}
+        \begin{lstlisting}[frame=tlrb]{Name}
+P0:
+store 1 -> a;
+store 1 -> b;
+        \end{lstlisting}
+    \end{minipage}\hfill
+    \begin{minipage}{.25\textwidth}
+        \begin{lstlisting}[frame=tlrb]{Name}
+P1:
+r1 = load b;
+fence;
+r2 = load a;
+        \end{lstlisting}
+    \end{minipage}\hfill
+    \begin{minipage}{.25\textwidth}
+        \begin{lstlisting}[frame=tlrb]{Name}
+P2:
+r3 = load a;
+fence;
+r4 = load b;
+        \end{lstlisting}
+    \end{minipage}
+
+    % <ANSWER HERE>
+
+\end{questions}
+
+
+\end{document}
