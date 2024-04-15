@@ -1,0 +1,59 @@
+class SimpleArrayList<E> {
+    private Object[] elementData; // The array buffer into which the elements are stored
+    private int size; // The size of the SimpleArrayList (the number of elements it contains)
+
+    private static final int DEFAULT_CAPACITY = 10;
+
+    public SimpleArrayList() {
+        elementData = new Object[DEFAULT_CAPACITY];
+    }
+
+    public SimpleArrayList(int initialCapacity) {
+        if (initialCapacity >= 0) {
+            elementData = new Object[initialCapacity];
+        } else {
+            throw new IllegalArgumentException("Illegal Capacity: " + initialCapacity);
+        }
+    }
+
+    public boolean add(E e) {
+        ensureCapacity(size + 1);
+        elementData[size++] = e;
+        return true;
+    }
+
+    @SuppressWarnings("unchecked")
+    public E get(int index) {
+        rangeCheck(index);
+        return (E) elementData[index];
+    }
+
+    public int size() {
+        return size;
+    }
+
+    private void ensureCapacity(int minCapacity) {
+        if (minCapacity - elementData.length > 0) {
+            grow(minCapacity);
+        }
+    }
+
+    private void grow(int minCapacity) {
+        int oldCapacity = elementData.length;
+        int newCapacity = oldCapacity + (oldCapacity >> 1); // Increase by 1.5 times
+        if (newCapacity - minCapacity < 0) {
+            newCapacity = minCapacity;
+        }
+        Object[] newElementData = new Object[newCapacity];
+        System.arraycopy(elementData, 0, newElementData, 0, size);
+        elementData = newElementData;
+    }
+
+    private void rangeCheck(int index) {
+        if (index >= size) {
+            throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + size);
+        }
+    }
+    
+    // ... additional methods like remove, set, etc. would go here ...
+}
