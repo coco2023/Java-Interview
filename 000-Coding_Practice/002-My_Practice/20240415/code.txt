@@ -282,6 +282,157 @@ class DoublyLinkedList {
     }
 }
 
+// Circular Linked List
+// Singly Circular Linked List
+class CircularSingleLinkedList {
+    Node head;
+    Node tail;
+
+    class Node {
+        int data;
+        Node next;
+
+        Node (int data) {
+            this.data = data;
+            this.next = null;
+        }
+    }
+
+    // Adding a node to the circular linked list
+    public void add (int data) {
+        Node newNode = new Node(data);
+
+        if (head == null) {
+            head = newNode;
+            tail = newNode;
+            newNode.next = head;
+        } else {
+            tail.next = newNode;
+            newNode.next = head;
+            tail = newNode;
+        }
+    }
+
+    // Display the circular linked list
+    public void display () {
+        if (head == null) return;
+
+        Node curr = head;
+        do {
+            System.out.println(curr.data);
+            curr = curr.next;
+        } while (curr != head);
+    }
+
+    // deleteHead
+    public void deleteHead () {
+        if (head == null) return;
+
+        if (head.next == head) {
+            head = null;
+        } else {
+            Node last = head;
+            while (last.next != head) {
+                last = last.next;
+            }
+            head = head.next;
+            last.next = head;
+        }
+    }
+
+    // delete
+    public void delete (int data) {
+        if (head == null) return;
+
+        Node prev = null;
+        Node curr = head;
+        do {
+            if (curr.data == data) {
+                if (curr == head) {     // Special case: Deleting the head node
+                    deleteHead();
+                } else {     // General case: Deleting middle or last node
+                    prev.next = curr.next;                    
+                }
+                return;
+            }
+            prev = curr;
+            curr = curr.next;
+        } while (curr != head || prev == null);
+    }
+}
+
+// Doubly Circular Linked List
+class CircularDoubleLinkedList {
+
+    Node head;
+    Node tail;
+
+    class Node {
+        int data;
+        Node prev;
+        Node next;
+
+        Node (int data) {
+            this.data = data;
+            this.prev = prev;
+            this.next = next;
+        }
+    }
+
+    // Adding a node to the doubly circular linked list
+    public void add (int data) {
+        Node newNode = new Node (data);
+
+        if (head == null) {
+            head = newNode;
+            tail = newNode;
+            newNode.prev = tail;
+            newNode.next = head;
+        } else {
+            tail.next = newNode;
+            newNode.next = head;
+            head.prev = newNode;
+            newNode.prev = tail;
+            tail = newNode;
+        }
+    }
+
+    // Display the doubly circular linked list
+    public void display () {
+        if (head == null) return;
+
+        Node curr = head;
+        do {
+            System.out.println(curr.data);
+            curr = curr.next;
+        } while (curr != head);
+    }
+
+    // delete
+    public void delete (int data) {
+        if (head == null) return;
+
+        Node curr = head;
+        do {
+            if (curr.data == data) {
+                if (curr == head && curr.next == head) {    // Only one node in the list
+                    head = null;
+                } else {
+                    curr.prev.next = curr.next;
+                    curr.next.prev = curr.prev;
+                    if (curr == head) {
+                        head = curr.next;
+                    }
+                }
+                return;
+            }
+            curr = curr.next;
+        } while (curr != head);
+    }
+}
+
+
+
 # E in Java 泛型
 In Java, when you compile a program, the compiler checks your code for potential problems and can issue warnings. Warnings are not errors; they don't prevent your code from compiling, but they indicate potential issues or bad practices in your code that could lead to errors at runtime. Specific compiler warnings refer to particular types of issues that the compiler has identified. Examples include:
 
