@@ -2,6 +2,7 @@
 1. https://github.com/binwangwork/gameTheory
 2. https://github.com/apachecn/stanford-game-theory-notes-zh
 3. https://csdiy.wiki/%E5%A5%BD%E4%B9%A6%E6%8E%A8%E8%8D%90/
+4. LnkedList: https://www.freecodecamp.org/news/how-linked-lists-work/#:~:text=The%20first%20node%20of%20the,point%20to%20any%20memory%20location.
 
 # cs courses
 cs courses: https://cs.illinois.edu/academics/courses

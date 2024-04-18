@@ -108,6 +108,180 @@ class SimpleArrayList<E> {
     }
 }
 
+
+// DoublyLinkedList 
+class DoublyLinkedList {
+    Node head;
+    Node tail;
+    
+    class Node {
+        int data;
+        Node prev;
+        Node next;
+
+        Node (int data) {
+            this.data = data;
+            this.prev = null;
+            this.next = null;
+        }
+    }
+
+    // Add a node at the end of the list
+    public void appendLast (int data) {
+        Node newNode = new Node(data);
+        if (head == null) {
+            head = newNode;
+            tail = newNode;
+        } else {
+            tail.next = newNode;
+            newNode.prev = tail;
+            tail = newNode;
+        }
+    }
+
+    // Add a node at the beginning of the list
+    public void appendFirst (int data) {
+        Node newNode = new Node(data);
+        if (head == null) {
+            head = newNode;
+            tail = newNode;
+        } else {
+            newNode.next = head;
+            head.prev = newNode;
+            head = newNode;
+        }
+    }
+
+    // Insert After - Adds an element after an item of the list
+    public void insertAfter (int data, int afterData) {
+        Node curr = head;
+
+        while (curr != null && curr.data != afterData) {
+            curr = curr.next;
+        }
+
+        if (curr == null) return;
+        Node newNode = newNode(data);
+        newNode.next = curr.next;
+        newNode.prev = curr;
+        if (curr.next != null) {  // Pay attention here!
+            curr.next.prev = newNode;
+        } else {
+            tail = newNode;
+        }
+        curr.next = newNode;
+    }
+
+    // Display the list in a forward direction
+    public void displayForward () {
+        Node curr = head;
+        while (curr != null) {
+            System.out.println(curr.data);
+            curr = curr.next;
+        }
+    }
+
+    // Delete First - Deletes an element at the beginning of the list
+    public void deleteFirst () {
+        if (head == null) return;
+
+        if (head == tail) {
+            head = tail = null;
+        } else {
+            head = head.next;
+            head.prev = null;
+        }
+    }
+
+    // Delete Last - Deletes an element from the end of the list
+    public void deleteLast () {
+        if (tail == null) return;
+
+        if (head == tail) {
+            head= = tail = null;
+        } else {
+            tail = tail.prev;
+            tail.next = null;
+        }
+    }
+
+    // Method to delete a node with the given key
+    public void deleteNode (int data) {
+        if (head == null) return;
+
+        Node curr = head;
+        while (curr != null && curr.data != data) {
+            curr = curr.next;
+        }
+
+        if (curr == null) return;
+        if (curr == head) deleteFirst();
+        else if (curr == tail) deleteLast();
+        else {
+            curr.prev.next = curr.next;
+            if (curr.next != null) {
+                curr.next.prev = curr.prev;
+            }
+        }
+        
+    }
+
+    // Method to search a node with the given key
+    public boolean search (int data) {
+        if (head == null) return false;
+
+        while (curr != null) {
+            if (curr.data == data) return true;
+            curr = curr.next;
+        }
+
+        return false;
+    }
+
+    // 
+
+    // Method to update the first occurrence of old_key with new_key
+    public void update (int old_key, int new_key) {
+        Node curr = head;
+        
+        while (curr != null) {
+            if (curr.data == old_key) {
+                curr.data = new_key; 
+                return;
+            }
+            curr = curr.next;
+        }
+    }
+
+    // Method to print the doubly linked list
+    public void printList () {
+        if (head == null) return;
+
+        Node curr = head;
+        while (curr != null) {
+            System.out.println(curr.data);
+            curr = curr.next;
+        }
+    }
+
+    // Driver method to test the above methods
+    public static main (String[] args) {
+        DoublyLinkedList doubleLinkedList = new DoublyLinkedList();
+        doubleLinkedList.appendLast(1);
+        doubleLinkedList.appendLast(2);
+        doubleLinkedList.appendLast(3);
+        doubleLinkedList.appendLast(4);
+
+        doubleLinkedList.printList();
+
+        doubleLinkedList.update(2, 5);
+        doubleLinkedList.insertAfter(7, 2);
+        doubleLinkedList.deleteLast();
+        doubleLinkedList.deleteFirst();
+        doubleLinkedList.delete(2);
+    }
+}
+
 # E in Java 泛型
 In Java, when you compile a program, the compiler checks your code for potential problems and can issue warnings. Warnings are not errors; they don't prevent your code from compiling, but they indicate potential issues or bad practices in your code that could lead to errors at runtime. Specific compiler warnings refer to particular types of issues that the compiler has identified. Examples include:
 
@@ -341,8 +515,3 @@ class LinkedList {
 
 }
 
-
-// DoublyLinkedList 
-class DoublyLinkedList {
-    
-}
