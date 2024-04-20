@@ -1,0 +1,29 @@
+class TreeNode {
+
+          int data;
+          TreeNode left;
+          TreeNode right;
+
+          TreeNode (int data) {
+                    this.data = data;
+                    this.left = null;
+                    this.right = null;
+          }
+
+          // insert
+
+          // search
+
+          // in-order (recursive)
+
+          // pre-order (recursive)
+
+          // post-order (recursive)
+
+          // in-order (lteratively)
+
+          // pre-order (lteratively)
+
+          // post-order (lteratively)
+
+}

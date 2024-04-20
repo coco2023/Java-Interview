@@ -1,0 +1,668 @@
+class SimpleArrayList<E> {
+    private Object[] elementData; // The array buffer into which the elements are stored
+    private int size; // The size of the SimpleArrayList (the number of elements it contains)
+
+    private static final int DEFAULT_CAPACITY = 10;
+
+    public SimpleArrayList() {
+        elementData = new Object[DEFAULT_CAPACITY];
+    }
+
+    public SimpleArrayList(int initialCapacity) {
+        if (initialCapacity >= 0) {
+            elementData = new Object[initialCapacity];
+        } else {
+            throw new IllegalArgumentException("Illegal Capacity: " + initialCapacity);
+        }
+    }
+
+    public boolean add(E e) {
+        ensureCapacity(size + 1);
+        elementData[size++] = e;
+        return true;
+    }
+
+    @SuppressWarnings("unchecked")  // suppress specific compiler warnings. suppressing warnings about unchecked type casts.
+    public E get(int index) {
+        rangeCheck(index);
+        return (E) elementData[index];
+    }
+
+    public int size() {
+        return size;
+    }
+
+    private void ensureCapacity(int minCapacity) {
+        if (minCapacity - elementData.length > 0) {
+            grow(minCapacity);
+        }
+    }
+
+    private void grow(int minCapacity) {
+        int oldCapacity = elementData.length;
+        int newCapacity = oldCapacity + (oldCapacity >> 1); // Increase by 1.5 times
+        if (newCapacity - minCapacity < 0) {
+            newCapacity = minCapacity;
+        }
+        Object[] newElementData = new Object[newCapacity];
+        System.arraycopy(elementData, 0, newElementData, 0, size);
+        elementData = newElementData;
+    }
+
+    private void rangeCheck(int index) {
+        if (index >= size) {
+            throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + size);
+        }
+    }
+    
+    public E remove(int index) {
+        rangeCheck(index);
+        E oldValue = get(index);
+
+        int numMoved = size - index - 1;
+        if (numMoved > 0) {
+            System.arraycopy(elementData, index + 1, elementData, index, numMoved);
+        }
+        elementData[--size] = null;
+        return oldValue;
+    }
+
+    public void clear() {
+        for (int i = 0; i < size; i++) {
+            elementData[i] = null;
+        }
+
+        size = 0;
+    }
+
+    public boolean contains(Object o) {
+        return indexOf(o) >= 0;
+    }
+
+    public int indexOf(Object o) {
+        if (o == null) {
+            for (int i = 0; i < size; i++)
+                if (elementData[i] == null)
+                    return i;
+        } else {
+            for (int i = 0; i < size; i++)
+                if (o.equals(elementData[i]))
+                    return i;
+        }
+        return -1; // Not found
+    }
+
+    // Method to insert an element after a given index
+    public void insertAfter() {
+        if (index < 0 || index >= size) {
+            throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + size);
+        }
+        ensureCapacity(size + 1);
+        // System.arraycopy(elementData, index + 1, elementData, index + 2, size - (index + 1)); // 0 1 2 3 4
+        for (int i = size; i > index + 1; i==) {
+            elementData[i] = elementData[i - 1];
+        }
+
+        elementData[index + 1] = element;
+        size++;
+    }
+}
+
+
+// DoublyLinkedList 
+class DoublyLinkedList {
+    Node head;
+    Node tail;
+    
+    class Node {
+        int data;
+        Node prev;
+        Node next;
+
+        Node (int data) {
+            this.data = data;
+            this.prev = null;
+            this.next = null;
+        }
+    }
+
+    // Add a node at the end of the list
+    public void appendLast (int data) {
+        Node newNode = new Node(data);
+        if (head == null) {
+            head = newNode;
+            tail = newNode;
+        } else {
+            tail.next = newNode;
+            newNode.prev = tail;
+            tail = newNode;
+        }
+    }
+
+    // Add a node at the beginning of the list
+    public void appendFirst (int data) {
+        Node newNode = new Node(data);
+        if (head == null) {
+            head = newNode;
+            tail = newNode;
+        } else {
+            newNode.next = head;
+            head.prev = newNode;
+            head = newNode;
+        }
+    }
+
+    // Insert After - Adds an element after an item of the list
+    public void insertAfter (int data, int afterData) {
+        Node curr = head;
+
+        while (curr != null && curr.data != afterData) {
+            curr = curr.next;
+        }
+
+        if (curr == null) return;
+        Node newNode = newNode(data);
+        newNode.next = curr.next;
+        newNode.prev = curr;
+        if (curr.next != null) {  // Pay attention here!
+            curr.next.prev = newNode;
+        } else {
+            tail = newNode;
+        }
+        curr.next = newNode;
+    }
+
+    // Display the list in a forward direction
+    public void displayForward () {
+        Node curr = head;
+        while (curr != null) {
+            System.out.println(curr.data);
+            curr = curr.next;
+        }
+    }
+
+    // Delete First - Deletes an element at the beginning of the list
+    public void deleteFirst () {
+        if (head == null) return;
+
+        if (head == tail) {
+            head = tail = null;
+        } else {
+            head = head.next;
+            head.prev = null;
+        }
+    }
+
+    // Delete Last - Deletes an element from the end of the list
+    public void deleteLast () {
+        if (tail == null) return;
+
+        if (head == tail) {
+            head= = tail = null;
+        } else {
+            tail = tail.prev;
+            tail.next = null;
+        }
+    }
+
+    // Method to delete a node with the given key
+    public void deleteNode (int data) {
+        if (head == null) return;
+
+        Node curr = head;
+        while (curr != null && curr.data != data) {
+            curr = curr.next;
+        }
+
+        if (curr == null) return;
+        if (curr == head) deleteFirst();
+        else if (curr == tail) deleteLast();
+        else {
+            curr.prev.next = curr.next;
+            if (curr.next != null) {
+                curr.next.prev = curr.prev;
+            }
+        }
+        
+    }
+
+    // Method to search a node with the given key
+    public boolean search (int data) {
+        if (head == null) return false;
+
+        while (curr != null) {
+            if (curr.data == data) return true;
+            curr = curr.next;
+        }
+
+        return false;
+    }
+
+    // 
+
+    // Method to update the first occurrence of old_key with new_key
+    public void update (int old_key, int new_key) {
+        Node curr = head;
+        
+        while (curr != null) {
+            if (curr.data == old_key) {
+                curr.data = new_key; 
+                return;
+            }
+            curr = curr.next;
+        }
+    }
+
+    // Method to print the doubly linked list
+    public void printList () {
+        if (head == null) return;
+
+        Node curr = head;
+        while (curr != null) {
+            System.out.println(curr.data);
+            curr = curr.next;
+        }
+    }
+
+    // Driver method to test the above methods
+    public static main (String[] args) {
+        DoublyLinkedList doubleLinkedList = new DoublyLinkedList();
+        doubleLinkedList.appendLast(1);
+        doubleLinkedList.appendLast(2);
+        doubleLinkedList.appendLast(3);
+        doubleLinkedList.appendLast(4);
+
+        doubleLinkedList.printList();
+
+        doubleLinkedList.update(2, 5);
+        doubleLinkedList.insertAfter(7, 2);
+        doubleLinkedList.deleteLast();
+        doubleLinkedList.deleteFirst();
+        doubleLinkedList.delete(2);
+    }
+}
+
+// Circular Linked List
+// Singly Circular Linked List
+class CircularSingleLinkedList {
+    Node head;
+    Node tail;
+
+    class Node {
+        int data;
+        Node next;
+
+        Node (int data) {
+            this.data = data;
+            this.next = null;
+        }
+    }
+
+    // Adding a node to the circular linked list
+    public void add (int data) {
+        Node newNode = new Node(data);
+
+        if (head == null) {
+            head = newNode;
+            tail = newNode;
+            newNode.next = head;
+        } else {
+            tail.next = newNode;
+            newNode.next = head;
+            tail = newNode;
+        }
+    }
+
+    // Display the circular linked list
+    public void display () {
+        if (head == null) return;
+
+        Node curr = head;
+        do {
+            System.out.println(curr.data);
+            curr = curr.next;
+        } while (curr != head);
+    }
+
+    // deleteHead
+    public void deleteHead () {
+        if (head == null) return;
+
+        if (head.next == head) {
+            head = null;
+        } else {
+            Node last = head;
+            while (last.next != head) {
+                last = last.next;
+            }
+            head = head.next;
+            last.next = head;
+        }
+    }
+
+    // delete
+    public void delete (int data) {
+        if (head == null) return;
+
+        Node prev = null;
+        Node curr = head;
+        do {
+            if (curr.data == data) {
+                if (curr == head) {     // Special case: Deleting the head node
+                    deleteHead();
+                } else {     // General case: Deleting middle or last node
+                    prev.next = curr.next;                    
+                }
+                return;
+            }
+            prev = curr;
+            curr = curr.next;
+        } while (curr != head || prev == null);
+    }
+}
+
+// Doubly Circular Linked List
+class CircularDoubleLinkedList {
+
+    Node head;
+    Node tail;
+
+    class Node {
+        int data;
+        Node prev;
+        Node next;
+
+        Node (int data) {
+            this.data = data;
+            this.prev = prev;
+            this.next = next;
+        }
+    }
+
+    // Adding a node to the doubly circular linked list
+    public void add (int data) {
+        Node newNode = new Node (data);
+
+        if (head == null) {
+            head = newNode;
+            tail = newNode;
+            newNode.prev = tail;
+            newNode.next = head;
+        } else {
+            tail.next = newNode;
+            newNode.next = head;
+            head.prev = newNode;
+            newNode.prev = tail;
+            tail = newNode;
+        }
+    }
+
+    // Display the doubly circular linked list
+    public void display () {
+        if (head == null) return;
+
+        Node curr = head;
+        do {
+            System.out.println(curr.data);
+            curr = curr.next;
+        } while (curr != head);
+    }
+
+    // delete
+    public void delete (int data) {
+        if (head == null) return;
+
+        Node curr = head;
+        do {
+            if (curr.data == data) {
+                if (curr == head && curr.next == head) {    // Only one node in the list
+                    head = null;
+                } else {
+                    curr.prev.next = curr.next;
+                    curr.next.prev = curr.prev;
+                    if (curr == head) {
+                        head = curr.next;
+                    }
+                }
+                return;
+            }
+            curr = curr.next;
+        } while (curr != head);
+    }
+}
+
+
+
+# E in Java 泛型
+In Java, when you compile a program, the compiler checks your code for potential problems and can issue warnings. Warnings are not errors; they don't prevent your code from compiling, but they indicate potential issues or bad practices in your code that could lead to errors at runtime. Specific compiler warnings refer to particular types of issues that the compiler has identified. Examples include:
+
+- **Unchecked Warnings**: These occur when you're using operations that have a risk of introducing ClassCastExceptions at runtime, such as casting a raw type to a generic type. The `unchecked` warning can be suppressed if you're sure your code won't cause such exceptions.
+  
+- **Deprecation Warnings**: If you use methods, classes, or other elements that are marked as `@Deprecated`, the compiler will warn you that these elements may be removed in future versions.
+  
+- **Unused Variables**: When you declare but never use a variable, the compiler might warn you about the unused variable as it's often a sign of incomplete or inefficient code.
+
+Regarding the letter `E`, it is a type parameter in Java Generics. It's a placeholder that you can use when defining classes or methods that operate on a generic type. When you create an instance of a generic class or call a generic method, you can specify an actual type to replace `E`. For example:
+
+```java
+List<String> list = new ArrayList<>();
+```
+
+In this line, `String` is the actual type that replaces `E`. The `E` structure is not a structure in the typical sense of data structures; it is simply a placeholder representing "Element" by convention and can be any non-primitive type (i.e., any class type).
+
+In Java Generics, you can name the type parameter anything. The following are common conventions:
+
+- `E` - Element (used extensively by the Java Collections Framework)
+- `K` - Key
+- `V` - Value
+- `N` - Number
+- `T` - Type
+- `S`, `U`, `V`, etc. - 2nd, 3rd, 4th types
+
+Here's how you might define a simple generic class:
+
+```java
+public class Box<E> {
+    private E content;
+
+    public void set(E content) {
+        this.content = content;
+    }
+
+    public E get() {
+        return content;
+    }
+}
+```
+
+In this example, `E` is used as a placeholder for the type of `content` that `Box` can hold. When creating a `Box` object, you specify the type it will contain:
+
+```java
+Box<Integer> integerBox = new Box<>();
+```
+
+Here, `E` is replaced by `Integer`, so `content` within `integerBox` will be of type `Integer`.
+
+Java Generics add a way to specify concrete types to general-purpose classes and methods that operate on Object references. Before Generics, data structures like `List` could hold any type of object, and explicit casting was needed to retrieve an object in its original type, which could lead to runtime errors if the casting was incorrect.
+
+Here are the key benefits and characteristics of Java Generics:
+
+### Type Safety
+
+Generics provide compile-time type safety that allows programmers to catch invalid types at compile time. Using Java Generics makes the code safer because it will not compile if you try to use a type inappropriately.
+
+### Elimination of Casts
+
+With Generics, you don't need to cast objects when retrieving them from a collection because you specify the type of the collection and its elements upfront. This leads to clearer, more readable code, and fewer chances for `ClassCastException` at runtime.
+
+### Generic Algorithms
+
+By using Generics, you can write a single algorithm that can work on different types of objects, making the code more reusable. You define the algorithm with type parameters, and when you use the algorithm, you specify the concrete types.
+
+### Enhanced Code Readability
+
+Generics make your code more expressive because they enforce what type of objects are allowed in a given collection or can be used with a particular method. As a result, anyone reading your code can easily understand what types of objects the collection or method is working with.
+
+Here's a simple example of using Generics in Java:
+
+```java
+// A generic class with a generic type parameter E
+class Box<E> {
+    private E content;
+
+    public void setContent(E content) {
+        this.content = content;
+    }
+
+    public E getContent() {
+        return content;
+    }
+}
+
+// Usage:
+Box<String> stringBox = new Box<>();
+stringBox.setContent("Hello, World!");
+String value = stringBox.getContent(); // No cast needed
+```
+
+In the `Box` class, `E` is a type parameter that will be replaced by a concrete type when an instance of `Box` is created. In this case, we've created a `Box` for `String` objects. When we call `getContent()`, it returns a `String` without any need for casting.
+
+### Defining Generic Types
+
+You can define your own generic types for classes, interfaces, and methods. Here are some examples:
+
+- Generic Class: `class MyClass<E> { ... }`
+- Generic Interface: `interface MyInterface<E> { ... }`
+- Generic Method: `public <T> T myMethod(T param) { ... }`
+
+### Wildcards
+
+Generics also support wildcards (`?`), which represent an unknown type. Wildcards can be bounded:
+
+- Upper Bounded Wildcard: `List<? extends Number>` can hold any subclass of `Number`.
+- Lower Bounded Wildcard: `List<? super Integer>` can hold Integer or any superclass of `Integer`.
+
+### Type Erasure
+
+Java Generics use type erasure to maintain compatibility with older versions of Java that did not include generics. This means that generic type information is used during compile time for type checking and then removed, effectively converting all generic types to raw types (like `Object`).
+
+Generics provide stronger type guarantees at compile time, but the generic type information is not available at runtime due to type erasure. Therefore, you can't, for example, instantiate a generic type at runtime or call `instanceof` on a generic type. 
+
+In summary, Java Generics enhance the language with parameterized types, offering a way to enforce additional type constraints during compile time and enabling the creation of type-safe and reusable code.
+
+
+/**
+* provide insert, delete, search, udpate operation for linkedlist 
+**/
+// Node Class
+class Node {
+    int data;
+    Node next;
+
+    Node (int data) {
+        this.data = data;
+        this.node = null;
+    }
+}
+
+// LinkedList 
+class LinkedList {
+
+    Node head;
+
+    // Method to insert a new node at the end of the list
+    public LinkedList append (int data) {
+        Node newNode = new Node(data);
+        if (head == null) {
+            head = newNode;
+        } else {
+            Node curr = head;
+            while (head.next != null) {
+                curr = curr.next;
+            }
+            curr.next = newNode;
+        }
+        return head;
+    }
+
+    // Method to insert a new node at the front of the list
+    public void prepend (int data) {
+        Node newNode = new Node(data);
+        newNode.next = head;
+        head = newNode;
+    }
+
+    // Method to delete a node with a specific key
+    public void delete (int key) {
+        if (head == null) return;
+
+        LinkedList prev = null;
+        LinkedList curr = head;
+
+        while (curr != null && curr.data != key) {
+            prev = curr;
+            curr = curr.next;
+        }
+        if (curr == null) return;
+        prev.next = curr.next;
+    }
+
+    // Method to search for an integer data
+    public boolean search (int key) {
+        Node curr = head;
+        while (curr != null) {
+            if (curr.data == key) {
+                return true;
+            } 
+            curr = curr.next;
+        }
+        returm false;
+    }
+
+    // Method to print the linked list
+    public LinkedList printList () {
+        Node tnode = head;
+        while (tnode != null) {
+            System.out.println(tnode.data + " ");
+            tnode = tnode.next;
+        }
+        System.out.println();
+    }
+
+    // Method to reverse the linked list
+    public void reverse() {
+        Node prev = null;
+        Node curr = head;
+        Node next = null;
+
+        while (curr != null) {
+            next = curr.next;
+            curr.next = prev;
+            prev = curr;
+            curr = next;
+        }
+
+        head = prev;
+    }
+
+
+
+    public static void main(String[] args) {
+        LinkedList list = new LinkedList();
+
+        list.append(10);
+        list.append(20);
+        list.append(30);
+        list.append(40);
+        list.append(50);
+        list.println();
+
+        list.delete(20);
+        list.printList();
+
+        list.search(10);
+        list.search(11);
+    }
+
+}
+

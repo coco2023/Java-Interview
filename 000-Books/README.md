@@ -67,3 +67,6 @@ For Java developers, certain books stand out as essential reads to solidify thei
 
 While these books are highly recommended, the importance of a book can vary depending on your current skill level, areas of interest, and professional needs. Continuous learning and applying what you've learned through practice is key in the ever-evolving field of software development.
 
+https://gist.github.com/matthewmccullough/2721876
+
+https://www.cs.ox.ac.uk/teaching/courses/2023-2024/cgt/
