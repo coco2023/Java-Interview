@@ -1,29 +1,190 @@
-class TreeNode {
+class BinarySearchTree {
+          TreeNode root;
 
-          int data;
-          TreeNode left;
-          TreeNode right;
+          class TreeNode {
+                    int data;
+                    TreeNode left;
+                    TreeNode right;
 
-          TreeNode (int data) {
-                    this.data = data;
-                    this.left = null;
-                    this.right = null;
+                    TreeNode (int data) {
+                              this.data = data;
+                              this.left = null;
+                              this.right = null;
+                    }
+          }
+
+          public BinarySearchTree () {
+                    this.root = null;
           }
 
           // insert
+          public void insert (int data) {
+                    root = insertRec(root, data);
+          }
+
+          private TreeNode insertRec (TreeNode root, int data) {
+                    if (root == null) {
+                              root = new TreeNode(data);
+                              return root;
+                    }
+                    if (data < root.data) {
+                              root.left = insertRec(root.left, data);
+                    } else if (data > root.data) {
+                              root.right = insertRec(root.right, data);
+                    }
+                    return root;
+          }
+
+          // Iteratively insert a new element into the BST
+          public void insert (int data) {
+                    TreeNode newNode = new TreeNode(data);
+                    if (root == null) {
+                              root = newNode;
+                              return;
+                    }
+                    TreeNode curr = root;
+                    TreeNode parent = null;
+                    while (true) {
+                              parent = curr;
+                              if (data < curr.data) {
+                                        curr = curr.left;
+                                        if (curr == null) {
+                                                  parent.left = newNode;
+                                                  return;
+                                        }
+                              } else {
+                                        curr = curr.right;
+                                        if (curr == null) {
+                                                  parent.right = newNode;
+                                                  return;
+                                        }
+                              }
+                    }
+          }
 
           // search
+          public boolean search (int data) {
+                    return searchRec(root, data);
+          }
+
+          private boolean searchRec (TreeNode root, int data) {
+                    if (root == null) return false;
+                    if (root.data == data) return true;
+
+                    if (data < root.data) { // left
+                              searchRec(root.left, data);
+                    } else { // right
+                              searchRec(root.right, data);
+                    }
+                    return false;
+          }
+
+          // Iteratively search for an element in the BST
+          public void search (int data) {
+                    if (root == null) return false;
+
+                    TreeNode curr = root;
+                    while (curr != null) {
+                              if (curr.data == data) return true;
+                              else if (data < curr.data) curr = curr.left;
+                              else if (data > curr.data) curr = curr.right;
+                    }
+                    return false;
+          }
 
           // in-order (recursive)
+          public void inOrder (TreeNode root) {
+                    if (root == null) return;
+
+                    inOrder(root.left);
+                    System.out.println(root.data);
+                    inOrder(root.right);
+          }
 
           // pre-order (recursive)
+          public void preOrder (TreeNode root) {
+                    if (root == null) return;
+
+                    System.out.println(root.data);
+                    preOrder(root.left);
+                    preOrder(root.right);
+          }
 
           // post-order (recursive)
+          public void postOrder () {
+                    if (root == null) return;
+
+                    postOrder(root.left);
+                    postOrder(root.right);
+                    System.out.println(root.data);
+          }
 
           // in-order (lteratively)
+          public void inOrder (TreeNode root) {
+                    if (root == null) return null;
+
+                    Stack<TreeNode> stack = new Stack<>();
+                    TreeNode curr = root;
+
+                    while (curr != null || !stack.isEmpty()) {
+                              while (curr != null) {
+                                        stack.push(curr);
+                                        curr = curr.left;
+                              }
+                              curr = stack.pop();
+                              System.out.println(curr.data);
+                              curr = curr.right;
+                    }
+          }
 
           // pre-order (lteratively)
+          public void preOrder (TreeNode root) {
+                    if (root == null) return;
+
+                    Stack<TreeNode> stack = new Stack<>();
+                    stack.push(root);
+
+                    while (!stack.isEmpty()) {
+                              TreeNode node = stack.pop();
+                              System.out.println(node.data);
+
+                              if (node.right != null) stack.push(node.right);   // push right first so that ensure left pop first
+                              if (node.left != null) stack.push(node.left);
+                    }
+          }
 
           // post-order (lteratively)
+          public void postOrder (TreeNode root) {
+                    if (root == null) return;
+
+                    Stack<TreeNode> stack1 = new Stack<>();
+                    Stack<TreeNode> stack2 = new Stack<>();
+                    stack1.push(root);
+
+                    while (!stack1.isEmpty()) {
+                              TreeNode node = stack1.pop();
+                              stack2.push(node); // first direct push root to stack2
+                              if (node.left != null) stack1.push(node.left);   
+                              if (node.right != null) stack1.push(node.right); // right is on the top, faster push into stack2 than left; later than stack1 to be pop;
+                    }
+
+                    while (!stack2.isEmpty()) {
+                              TreeNode node = stack2.pop();
+                              System.out.println(node.data);
+                    }
+          }
+
+          public static void main (String[] args) {
+                    BinarySearchTree bst = new BinarySearchTree();
+                    bst.root = new TreeNode(10);
+                    bst.root.left = new TreeNode(8);
+                    bst.root.right = new TreeNode(15);
+
+                    bst.root.left.left = new TreeNode(6);
+                    bst.root.left.right = new TreeNode(9);
+
+                    bst.root.right.left = new TreeNode(14);
+                    bst.root.right.right = new TreeNode(20);
+          }
 
 }
