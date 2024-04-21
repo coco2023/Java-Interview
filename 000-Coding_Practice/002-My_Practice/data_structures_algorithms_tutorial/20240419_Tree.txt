@@ -188,3 +188,150 @@ class BinarySearchTree {
           }
 
 }
+
+class AVLTree {
+          AVLTreeNode root;
+
+          class AVLTreeNode {
+                    int data;
+                    AVLTreeNode left;
+                    AVLTreeNode right;
+                    int height;
+
+                    AVLTreeNode(int data) {
+                              this.data = data;
+                              this.left = null;
+                              this.right = null;
+                              this.height = 1;
+                    }
+          }
+
+          private int height (AVLTreeNode N) {
+                    if (N == null) return 0;
+                    return N.height;
+          }
+
+          // Right rotate subtree rooted with y
+          private AVLTreeNode rightRotate (AVLTreeNode y) {
+                    AVLTreeNode x = y.left;
+                    AVLTreeNode T2 = x.right;
+
+                    // perform rotation
+                    x.right = y;
+                    y.left = T2;
+
+                    // Update heights
+                    y.height = Math.max(height(y.left), height(y.right)) + 1;
+                    x.height = Math.max(height(x.left), height(x.right)) + 1;
+
+                    // return new root
+                    return x;
+          }
+
+          // Left rotate subtree rooted with x
+          private AVLTreeNode leftRotate (AVLTreeNode x) {
+                    AVLTreeNode y = x.right;
+                    AVLTreeNode T2 = y.left;
+
+                    // rotation
+                    y.left = x;
+                    x.right = T2;
+
+                    // update heights
+                    x.height = Math.max(height(x.left), height(x.right)) + 1;
+                    y.height = Math.max(height(y.left), height(y.right)) + 1;
+
+                    // return new root
+                    return y;
+          }
+
+          private AVLTreeNode leftRightRotate (AVLTreeNode node) {
+                    node.left = leftRotate(node.left);
+                    return rightRotate(node);
+          }
+
+          private AVLTreeNode rightLeftRotate (AVLTreeNode node) {
+                    node.right = rightRotate(node.right);
+                    return leftRotate(node);
+          }
+
+          public void preOrder (AVLTreeNode root) {
+                    if (root == null) return;
+                    
+                    System.out.println(root.data);
+                    preOrder(root.left);
+                    preOrder(root.right);
+          }
+
+          // AVL Tree Check
+          public boolean isAVLTree (AVLTreeNode root) {
+                    return isAVLTreeHelper(root) != -1;
+          }
+
+          private int isAVLTreeHelper (AVLTreeNode node) {
+                    if (node == null) return 0;
+
+                    int leftHeight = isAVLTreeHelper(node.left);
+                    if (leftHeight == -1) return -1;
+
+                    int rightHeight = isAVLTreeHelper(node.right);
+                    if (rightHeight == -1) return -1;
+
+                    if (Math.abs(leftHeight - rightHeight) > 1) return -1;
+
+                    node.height = Math.max(leftHeight, rightHeight) + 1;
+                    return node.height;  // Return the height if subtree is AVL
+          }
+
+          // Utility function to get the balance factor of the node N
+          private int getBalance (AVLTreeNode N) {
+                    if (N == null) return 0;
+                    return height(N.left) - height(N.right);
+          }
+
+          // Insert a new key in the subtree rooted with node and returns the new root of the subtree.
+          public AVLTreeNode insert (AVLTreeNode node, int data) {
+                    // 1. Perform the normal BST insertion
+                    if (node == null) return new AVLTreeNode(data);
+
+                    if (data < node.data) node.left = insert(node.left, data);
+                    else if (data > node.data) node.right = insert(node.right, data);
+                    else return node;                       // Duplicate data not allowed
+
+                    // 2. Update height of this ancestor node
+                    node.height = 1 + Math.max(height(node.left), height(node.right));
+
+                    // 3. Get the balance factor of this ancestor node to check whether this node became unbalanced
+                    int balance = getBalance(node);
+
+                    // If this node becomes unbalanced, then there are 4 cases
+                    
+                    // Left Left Case
+                    if (balance > 1 && data < node.left.data) return rightRotate(node);
+
+                    // Right Right Case
+                    if (balance < -1 && data > node.right.data) return leftRotate(node);
+
+                    // Left Right Case
+                    if (balance > 1 && data > node.left.data) leftRightRotate(node);
+
+                    // Right Left Case
+                    if (balance < -1 && data < node.right.data) rightLeftRotate(node);
+
+                    return node;
+          }
+
+          public static void main (String[] args) {
+                    AVLTree tree = new AVLTree();
+                    tree.root = tree.insert(tree.root, 10);
+                    tree.root = tree.insert(tree.root, 20);
+                    tree.root = tree.insert(tree.root, 30);
+                    tree.root = tree.insert(tree.root, 40);
+                    tree.root = tree.insert(tree.root, 50);
+                    tree.root = tree.insert(tree.root, 25);
+
+                    tree.preOrder(tree.root);
+          }
+}
+
+
