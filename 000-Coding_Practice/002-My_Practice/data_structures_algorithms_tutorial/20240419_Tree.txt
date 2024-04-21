@@ -1,3 +1,4 @@
+// 20240420
 class BinarySearchTree {
           TreeNode root;
 
@@ -334,4 +335,491 @@ class AVLTree {
           }
 }
 
+/**
+*  Spanning Tree
+*  a spanning tree of a graph containing n vertices has exactly n−1 edges
+*  A spanning tree does not have cycles and it cannot be disconnected.
+*  A graph may have more than one spanning tree.
+*  refer: https://www.geeksforgeeks.org/spanning-tree/
+**/
+Suppose we are tasked with designing a network that connects several offices in different cities. The goal is to minimize the installation cost of the network, which is proportional to the length of the cable used to connect these cities. Given the distances (costs) between each pair of cities, we can use either Kruskal's or Prim's algorithm to find the most cost-effective way to connect all offices.
+
+// Kruskal's Algorithm
+class Edge implements Comparable<Edge> {
+          int src, dest, weight;
+          
+          public int compareTo (Edge compareEdge) {
+                    return this.weight - compareEdge.weight;
+          }
+}
+
+class Subset {
+          int parent, rank;
+}
+
+class Graph {
+          int vertices, edges;
+          Edge[] edge;
+
+          Graph (int v, int e) {
+                    vertices = v;
+                    edges = e;
+                    edge = new Edge[e];
+                    for (int i = 0; i < e; i++) {
+                              edge[i] = new Edge();
+                    }
+          }
+
+          int find (Subset subsets[], int i) {
+                    if (subsets[i].parent != i) {
+                              subsets[i].parent = find(subsets, subsets[i].parent);
+                    }
+                    return subsets[i].parent;
+          }
+
+          void union (Subset subsets[], int x, int y) {
+                    int xroot = find(subsets, x);
+                    int yroot = find(subsets, y);
+
+                    if (subsets[xroot].rank < subsets[yroot].rank) {
+                              subsets[xroot].parent = yroot;
+                    } else if (subsets[xroot].rank > subsets[yroot].rank) {
+                              subsets[yroot].parent = xroot;
+                    } else {
+                              subsets[yroot].parent = xroot;
+                              subsets[xroot].rank++;
+                    }
+          }
+
+          void KruskalMST () {
+                    Edge result[] = new Edge[vertices];
+                    int e = 0;
+                    int i = 0;
+                    for (int i = 0; i < vertices; i++) result[i] = new Edge();
+
+                    Arrays.sort(edge);
+
+                    Subset subsets[] = new Subset[vertices];
+                    for (int i = 0; i < vertices; i++) subsets[i] = new Subset();
+
+                    for (int v = 0; v < verticesl v++) {
+                              subsets[v].parent = v;
+                              subsets[v].rank = 0;
+                    }
+
+                    i = 0;
+                    while (e < vertices - 1) {
+                              Edge next_edge = new Edge();
+                              next_edge = edge[i];
+                              i++;
+
+                              int x = find(subsets, next_edge.src);
+                              int y = find(subsets, next_edge.dest);
+
+                              if (x != y) {
+                                        result[e] = next_edge;
+                                        e++;
+                                        union(subsets, x, y);
+                              }
+                    }
+
+                    for (int i = 0; i < e; i++) {
+                              System.out.println(
+                                        result[i].src + "--" + result[i].dest + "--" + result[i].weight
+                              );
+                    }
+          }
+
+          public static void main (String[] srgs) {
+                    int V = 4;
+                    int E = 5;
+                    Graph graph = new Graph(V, E);
+
+                    graph.edge[0].src = 0;
+                    graph.edge[0].dest = 1;
+                    graph.edge[0].weight = 10;
+
+                    graph.edge[1].src = 0;
+                    graph.edge[1].dest = 2;
+                    graph.edge[1].weight = 6;
+
+                    graph.edge[2].src = 0;
+                    graph.edge[2].dest = 3;
+                    graph.edge[2].weight = 5;
+
+                    graph.edge[3].src = 1;
+                    graph.edge[3].dest = 3;
+                    graph.edge[3].weight = 15;
+
+                    graph.edge[4].src = 2;
+                    graph.edge[4].dest = 3;
+                    graph.edge[4].weight = 4;
+
+                    graph.KruskalMST();
+          }
+}
+
+// Prim's Algorithm
+class Graph {
+
+          private int V;      // Number of vertices
+
+          int minKey (int key[], Boolean mstSet[]) {
+                    int min = Integer.MAX_VALUE, min_index = -1;
+                    for (int v = 0; v < V; v++) {
+                              if (!mstSet[v] && key[v] < min) {
+                                        min = key[v];
+                                        min_index = v;
+                              }
+                    }
+                    return min_index;
+          }
+          
+          void printMST (int parent[], int graph[][]) {
+                    System.out.println("Edge \tWeight");
+                    for (int i = 1; i < V; i++)
+                              System.out.println(parent[i] + " - " + i + "\t" + graph[i][parent[i]]);
+          }
+
+          void printMST (int graph[][]) {
+                    int parent[] = new int[V];
+                    int key[] = new int[V];
+                    Boolean mstSet[] = new Boolean[V];
+                    for (int i = 0; i < V; i++) {
+                              key[i] = Integer.MAX_VALUE;
+                              mstSet[i] = false;
+                    }
+                    key[0] = 0;         // Make key 0 so that this vertex is picked as first vertex
+                    parent[0] = -1;     // First node is always root of MST
+                    for (int count = 0; count < V - 1; count++) {
+                              int u = minKey(key, mstSet);
+                              mstSet[u] = true;
+                              for (int v = 0; v < V; v++) {
+                                        if (graph[u][v] != 0 && !mstSet[v] && graph[u][v] < key[v]) {
+                                                  parent[v] = u;
+                                                  key[v] = graph[u][v];
+                                        }
+                              }
+                    }
+                    printMST(parent, graph);
+          }
+
+          public static void main (String[] args) {
+                    Graph t = new Graph();
+                    t.V = 5;
+                    int graph[][] = new int[][] { { 0, 2, 0, 6, 0 },
+                                                  { 2, 0, 3, 8, 5 },
+                                                  { 0, 3, 0, 0, 7 },
+                                                  { 6, 8, 0, 0, 9 },
+                                                  { 0, 5, 7, 9, 0 } };
+                    t.printMST(graph);
+          }
+}
+
+/**
+*  Min-Max Heap: a binary heap that combines the properties of both Min-Heap and Max-Heap
+*  the even levels are Min levels, and the odd levels are Max levels, or vice versa
+*  assume even levels (starting with level 0 at the root) are Min levels and odd levels are Max levels
+**/
+class MinMaxHeap {
+          private ArrayList<Integer> heap;
+
+          public MinMaxHeap () {
+                    this.heap = new ArrayList<>();
+          }
+
+          private int parent (int pos) {
+                    return (pos - 1) / 2;
+          }
+
+          private int leftChild (int pos) {       // Calculates the index of the left child of the node at index pos in the array
+                    return (2 * pos) + 1;         // For any node at index i, the left child can be found at index 2i + 1.
+          }
+
+          private int rightChild (int pos) {      // Calculates the index of the right child of the node at index pos.
+                    return (2 * pos) + 2;         // the right child's position is determined by the formula 2i + 2 for a node at index i.
+          }
+
+          private boolean isMinLevel (int level) {
+                    return level % 2 == 0;
+          }
+
+          private void swap (int fpos, int spos) {
+                    int tmp;
+                    tmp = heap.get(fpos);
+                    heap.set(fpos, heap.get(spos));
+                    heap.set(spos, tmp);
+          }
+
+          public void insert (int element) {
+                    heap.add(element);                      // Add element at the end
+                    int current = heap.size() - 1;
+
+                    // Traverse up and fix violated property
+                    while (current != 0) {
+                              int parentIndex = parent(current);
+                              int level = (int) (Math.log(current + 1) / Math.log(2));    // calculate level from index
+
+                              if (isMinLevel(level)) {
+                                        if (heap.get(current) > heap.get(parentIndex)) {
+                                                  swap(current, parentIndex);
+                                                  currnet = parentIndex;
+                                        } else {
+                                                  break;
+                                        }
+                              } else {
+                                        if (heap.get(current) < heap.get(parentIndex)) {
+                                                  swap(currnet, parentIndex);
+                                                  current = parentIndex;
+                                        } else {
+                                                  break;
+                                        }
+                              }
+                    }
+          }
+
+          public Integer peek () {
+                    return heap.size() > 0 ? heap.get(0) : null;
+          }
+
+          // Helper function to print the heap
+          public void printHeap () {
+                    for (int i = 0; i < heap.size(); i++) {
+                              System.out.println(heap.get(i) + " ");
+                    }
+          }
+
+          public static void main (String[] args) {
+                    MinMaxHeap minMaxHeap = new MinMaxHeap();
+                    minMaxHeap.insert(5);
+                    minMaxHeap.insert(3);
+                    minMaxHeap.insert(4);
+                    minMaxHeap.insert(6);
+                    minMaxHeap.insert(1);
+                    minMaxHeap.insert(7);
+
+                    minMaxHeap.printHeap();
+                    System.out.println("The top element is: " + minMaxHeap.peek());
+          }
+}
+
+// Priority Queue Using Min-Heap
+A priority queue is a specialized queue that prioritizes elements according to their order, as determined by their natural ordering or by a comparator provided at queue construction time. In Java, priority queues are typically implemented using a binary heap.
+class MinPriorityQueue {
+          private ArrayList<Integer> heap;
+
+          public MinPriorityQueue () {
+                    this.heap = new ArrayList<>();
+          }
+
+          private int parent (int i) {
+                    return (i - 1) / 2;
+          }
+
+          private int leftChild (int i) {
+                    return i * 2 + 1;
+          }
+
+          private int rightChild (int i) {
+                    return i * 2 + 2;
+          }
+
+          private swap (int i, int j) {
+                    Integer temp = heap.get(i);
+                    heap.set(i, heap.get(j));
+                    heap.set(j, temp);
+          }
+
+          public void insert (int key) {
+                    heap.add(key);
+                    int index = heap.size() - 1;
+                    while (index != 0 && heap.get(parent(index)) > heap.get(index)) {
+                              swap(index, parent(index));
+                              index = parent(index);
+                    }
+          }
+
+          public int extractMin () {
+                    if (heap.size() == 0) {
+                              throw new IllegalStateException("Cannot extract from an empty heap");
+                    }
+
+                    int min = heap.get(0);
+                    int lastItem = heap.remove(heap.size() - 1);
+                    if (heap.size() > 0) {
+                              heap.set(0, lastItem);
+                              minHeapify(0);
+                    }
+                    return min;                    
+          }
+
+          // minHeapify used to restore the heap property after insertion or deletion
+          private void minHeapify (int i) {
+                    int left = leftChild(i);
+                    int right = rightChild(i);
+                    int smallest = i;
+
+                    if (left < heap.size() && heap.get(left) < heap.get(smallest)) smallest = left;
+                    if (right < heap.size() && heap.get(right) < heap.get(smallest)) smallest = right;
+                    if (smallest != i) {
+                              swap(i, smallest);
+                              minHeapify(smallest);
+                    }
+          }
+
+          public Integer peek () {
+                    if (heap.size() == 0) return null;
+                    return heap.get(0);
+          }
+
+          public boolean isEmpty () {
+                    return heap.size() == 0;
+          }
+
+          public static void main (String[] args) {
+                    MinPriorityQueue pq = new MinPriorityQueue();
+                    pq.insert(3);
+                    pq.insert(13);
+                    pq.insert(4);
+                    pq.insert(6);
+                    pq.insert(1);
+
+                    pq.extractMin();              // Output: 1
+                    pq.extractMin();              // Output: 3
+                    pq.peek();                    // Output: 4
+                    pq.extractMin();              // Output: 4
+          }
+}
+
+# Comparable & Comparator
+In Java, the `Comparable` interface and the `Comparator` interface are both used for defining the order of objects, but they serve slightly different purposes and are used in different scenarios. Understanding when to use each can help you write more flexible and reusable code.
+
+### 1. `Comparable` Interface
+
+**Usage**: The `Comparable` interface is used when you want to define a **natural ordering** for objects of a particular class. It requires the class to implement a single method, `compareTo`, which compares the object with another object of the same type.
+
+**When to Use**:
+- When there's a single, natural ordering of the elements that you want to enforce throughout your application.
+- When you're working with your own classes and can modify the class source.
+
+**Example**:
+```java
+public class Person implements Comparable<Person> {
+    private String name;
+    private int age;
+
+    public Person(String name, int age) {
+        this.name = name;
+        this.age = age;
+    }
+
+    @Override
+    public int compareTo(Person other) {
+        return Integer.compare(this.age, other.age);
+    }
+
+    @Override
+    public String toString() {
+        return name + ": " + age;
+    }
+}
+```
+Here, `Person` objects are naturally ordered by age.
+
+**Usage in Code**:
+```java
+List<Person> people = new ArrayList<>();
+people.add(new Person("Alice", 30));
+people.add(new Person("Bob", 25));
+people.add(new Person("Charlie", 35));
+
+Collections.sort(people); // Sorts by natural order, which is by age
+```
+
+### 2. `Comparator` Interface
+
+**Usage**: The `Comparator` interface is used when you want to define an **external, possibly multiple different orders** for objects, which may not modify the objects' class or when you want to provide multiple ways of ordering instances of the same class.
+
+**When to Use**:
+- When you cannot modify the class whose objects you need to sort (e.g., classes from a library).
+- When you need multiple different ways to sort the same class of objects.
+- When sorting based on criteria that are not intrinsic to the objects themselves.
+
+**Example**:
+```java
+public class AgeComparator implements Comparator<Person> {
+    @Override
+    public int compare(Person p1, Person p2) {
+        return Integer.compare(p1.getAge(), p2.getAge());
+    }
+}
+
+public class NameComparator implements Comparator<Person> {
+    @Override
+    public int compare(Person p1, Person p2) {
+        return p1.getName().compareTo(p2.getName());
+    }
+}
+```
+
+**Usage in Code**:
+```java
+List<Person> people = new ArrayList<>();
+people.add(new Person("Alice", 30));
+people.add(new Person("Bob", 25));
+people.add(new Person("Charlie", 35));
+
+Collections.sort(people, new AgeComparator()); // Sorts by age
+Collections.sort(people, new NameComparator()); // Sorts by name
+```
+
+### Practical Considerations
+
+- **Flexibility**: `Comparator` provides more flexibility as it allows multiple sorting criteria for the same objects and can be used without altering the object's class definition.
+- **Design**: Use `Comparable` when sorting with a single natural order and `Comparator` when you need specific control over the sort order or multiple different sorting orders.
+
+Using these interfaces effectively depends on understanding your specific needs for ordering elements in your application, whether that's enforcing a natural order with `Comparable` or defining multiple specific orders with `Comparator`. This flexibility makes Java collections highly adaptable to a wide range of use cases.
+
+# Spanning Tree
+
+A **Spanning Tree** of a graph is a subgraph that includes all the vertices of the graph and is a single connected tree. It must cover all vertices with the minimum possible number of edges, which means a spanning tree of a graph containing \( n \) vertices has exactly \( n-1 \) edges. A spanning tree does not have cycles and it cannot be disconnected.
+
+### Structure of a Spanning Tree
+
+The structure of a spanning tree includes:
+
+- **Vertices**: All the vertices of the original graph.
+- **Edges**: A subset of the edges from the original graph that connects all the vertices without any cycles, ensuring the graph is acyclic and connected.
+
+This structure allows for several possible spanning trees for a single graph, depending on which edges are chosen, as long as the conditions of connectivity and acyclicity are met.
+
+### Popular Algorithms Related to Spanning Trees
+
+1. **Kruskal’s Algorithm**:
+   - This algorithm is a popular method to find a Minimum Spanning Tree (MST) of a weighted graph. It works by sorting all the edges of the graph by ascending edge weight and adding them one by one to the spanning tree, provided they don’t form a cycle with the already included edges until there are \( n-1 \) edges in the tree.
+
+2. **Prim’s Algorithm**:
+   - Prim's algorithm is another approach to finding an MST. It starts with a single vertex and grows the spanning tree one edge at a time, always choosing the smallest available edge that connects a vertex in the tree to a vertex outside the tree until all vertices are included.
+
+3. **Borůvka’s Algorithm**:
+   - Also known as Sollin's algorithm, it is an older and less common algorithm for finding the MST but is of interest for distributed systems due to its structure. It proceeds in rounds, selecting the smallest edge from each component to merge components into larger components, repeating until only one component (the MST) remains.
+
+### Popular Questions and Problems
+
+- **Finding the Minimum Spanning Tree (MST)**:
+  - Given a weighted graph, find a spanning tree with the minimum total edge weight.
+- **Network Design**:
+  - Practical applications in designing network systems like telecommunications or electrical grids, where the goal is to minimize the cost of wiring or cabling but still connect all points.
+- **Approximation Algorithms for NP-Hard Problems**:
+  - Using MSTs to approximate solutions for harder problems, such as the traveling salesman problem (TSP).
+- **Redundancy Detection**:
+  - Detecting redundant connections in a network that could be removed without disconnecting any vertices.
+
+### Use Cases
+
+- **Network Design**: When planning the layout of electricity grids or computer networks, an MST can ensure minimal material usage and cost.
+- **Cluster Analysis**: In data clustering, MSTs can help understand the structure of data and identify clusters based on connectivity with minimal distances.
+- **Image Segmentation in Computer Vision**: MSTs are used to segment images into meaningful clusters or regions.
+
+Spanning trees are fundamental in both theory and practical applications due to their property of connecting all points in a graph minimally and efficiently, making them essential in algorithms and network design problems.
 

@@ -169,7 +169,94 @@ convert an array into a stream:
 Stream.of(array).forEach(System.out::println);
 ```
 
+# Comparable & Comparator
+In Java, the `Comparable` interface and the `Comparator` interface are both used for defining the order of objects, but they serve slightly different purposes and are used in different scenarios. Understanding when to use each can help you write more flexible and reusable code.
 
+### 1. `Comparable` Interface
+
+**Usage**: The `Comparable` interface is used when you want to define a **natural ordering** for objects of a particular class. It requires the class to implement a single method, `compareTo`, which compares the object with another object of the same type.
+
+**When to Use**:
+- When there's a single, natural ordering of the elements that you want to enforce throughout your application.
+- When you're working with your own classes and can modify the class source.
+
+**Example**:
+```java
+public class Person implements Comparable<Person> {
+    private String name;
+    private int age;
+
+    public Person(String name, int age) {
+        this.name = name;
+        this.age = age;
+    }
+
+    @Override
+    public int compareTo(Person other) {
+        return Integer.compare(this.age, other.age);
+    }
+
+    @Override
+    public String toString() {
+        return name + ": " + age;
+    }
+}
+```
+Here, `Person` objects are naturally ordered by age.
+
+**Usage in Code**:
+```java
+List<Person> people = new ArrayList<>();
+people.add(new Person("Alice", 30));
+people.add(new Person("Bob", 25));
+people.add(new Person("Charlie", 35));
+
+Collections.sort(people); // Sorts by natural order, which is by age
+```
+
+### 2. `Comparator` Interface
+
+**Usage**: The `Comparator` interface is used when you want to define an **external, possibly multiple different orders** for objects, which may not modify the objects' class or when you want to provide multiple ways of ordering instances of the same class.
+
+**When to Use**:
+- When you cannot modify the class whose objects you need to sort (e.g., classes from a library).
+- When you need multiple different ways to sort the same class of objects.
+- When sorting based on criteria that are not intrinsic to the objects themselves.
+
+**Example**:
+```java
+public class AgeComparator implements Comparator<Person> {
+    @Override
+    public int compare(Person p1, Person p2) {
+        return Integer.compare(p1.getAge(), p2.getAge());
+    }
+}
+
+public class NameComparator implements Comparator<Person> {
+    @Override
+    public int compare(Person p1, Person p2) {
+        return p1.getName().compareTo(p2.getName());
+    }
+}
+```
+
+**Usage in Code**:
+```java
+List<Person> people = new ArrayList<>();
+people.add(new Person("Alice", 30));
+people.add(new Person("Bob", 25));
+people.add(new Person("Charlie", 35));
+
+Collections.sort(people, new AgeComparator()); // Sorts by age
+Collections.sort(people, new NameComparator()); // Sorts by name
+```
+
+### Practical Considerations
+
+- **Flexibility**: `Comparator` provides more flexibility as it allows multiple sorting criteria for the same objects and can be used without altering the object's class definition.
+- **Design**: Use `Comparable` when sorting with a single natural order and `Comparator` when you need specific control over the sort order or multiple different sorting orders.
+
+Using these interfaces effectively depends on understanding your specific needs for ordering elements in your application, whether that's enforcing a natural order with `Comparable` or defining multiple specific orders with `Comparator`. This flexibility makes Java collections highly adaptable to a wide range of use cases.
 
 
 
