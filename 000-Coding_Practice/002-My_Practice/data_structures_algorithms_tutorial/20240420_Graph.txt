@@ -1,0 +1,137 @@
+// refer: https://www.tutorialspoint.com/graph_theory/graph_theory_fundamentals.htm
+class Graph {
+          private Map<Integer, List<Integer>> adjacencyList;
+
+          public Graph () {
+                    this.adjacencyList = new HashMap<>();
+          }
+
+          // Adds a vertex to the graph
+          public void addVertex (int vertex) {
+                    adjacencyList.putIfAbsent(vertex, new ArrayList<>());
+          }
+
+          // Adds an edge between two vertices in the graph
+          public void addEdge (int vertex1, int vertex2) {
+                    // Add the edge from vertex1 to vertex2
+                    adjacencyList.get(vertex1).add(vertex2);  // If it's a directed graph, only use this line
+                    // If it's an undirected graph, uncomment the following line:
+                    // adjacencyList.get(vertex2).add(vertex1);
+          }
+
+          // Display the adjacency list of a vertex
+          public void displayVertex (int vertex) {
+                    if (adjacencyList.containsKey(vertex)) {
+                              System.out.print("Vertex " + vertex + " is connected to: ");
+                              for (int edge : adjacencyList.get(vertex)) {
+                                        System.out.print(edge + " ");
+                              }
+                    } else {
+                              System.out.println("Vertex " + vertex + " does not exist.");
+                    }
+          }
+
+          // Depth First Search (DFS) Algorithm : explore all the nodes and edges of a graph systematically
+          // Recursive method for dfs
+          // 1. Start at the selected node (root).
+          // 2. Mark the node as visited.
+          // 3. For each adjacent node:
+          //    - If it hasn't been visited, recursively visit this adjacent node.
+
+          public void dfsRecursive (int start) {
+                    Set<Integer> visited = new HashSet<>();
+                    dfsHelper(start, visited);
+          }
+
+          private void dfsHelper (int vertex, Set<Integer> visited) {
+                    visited.add(vertex);
+                    System.out.println(vertex + " ");
+
+                    List<Integer> edges = adjacencyList.get(vertex);
+                    if (edges != null) {
+                              for (int adjacency : edges) {
+                                        if (!visited.contains(adjacency)) {
+                                                  dfsHelper(adjacency, visited);
+                                        }
+                              }
+                    }
+          }
+
+          // Iterative method for dfs
+          public void dfsIterative (int start) {
+                    Set<Integer> visited = new HashSet<>();
+                    Stack<Integer> stack = new Stack<>();
+                    stack.push(start);
+
+                    while (!stack.isEmpty()) {
+                              int vertex = stack.pop();
+                              if (!visited.contains(vertex)) {
+                                        visited.add(vertex);
+                                        System.out.println(vertex + " ");
+                                        List<Integer> edges = adjacencyList.get(vertex);
+                                        if (edges != null) {
+                                                  Collections.reverse(edges);   // Reverse to maintain correct traversal order
+                                                  for (int adjacent : edges) {
+                                                            if (!visited.contains(adjacent)) {
+                                                                      stack.push(adjacent);
+                                                            }
+                                                  }
+                                        }
+                              }
+                    }
+          }
+
+          // Breadth First Search (BFS) algorithm
+          public void bfs (int start) {
+                    Queue<Integer> queue = new LinkedList<>();
+                    Set<Integer> visited = new HashSet<>();
+
+                    // Start by visiting the starting vertex
+                    queue.add(start);
+                    visited.add(start);
+
+                    while (!queue.isEmpty()) {
+                              int vertex = queue.poll();
+                              System.out.print(vertex + " ");
+
+                              // Get all adjacent vertices
+                              List<Integer> edges = adjacencyList.get(vertex);
+                              if (edges != null) {
+                                        for (int adjacent : edges) {
+                                                  if (!visited.contains(adjacent)) {
+                                                            visited.add(adjacent);
+                                                            queue.add(adjacent);
+                                                  }
+                                        }
+                              }
+                    }
+          }
+
+
+          public static void main (String[] args) {
+                    Graph graph = new Graph();
+                    graph.addVertex(0);
+                    graph.addVertex(1);
+                    graph.addVertex(2);
+                    graph.addVertex(3);
+
+                    graph.addEdge(0, 1);
+                    graph.addEdge(0, 2);
+                    graph.addEdge(1, 2);
+                    graph.addEdge(2, 0);
+                    graph.addEdge(2, 3);
+                    graph.addEdge(3, 3);
+
+                    graph.displayVertex(1);
+                    graph.displayVertex(2);
+                    graph.displayVertex(3);
+
+                    System.out.println("Starting DFS Recursively:");
+                    graph.dfsRecursive(2);  // Starting from vertex 2
+
+                    System.out.println("\nStarting DFS Iteratively:");
+                    graph.dfsIterative(2);  // Starting from vertex 2
+
+                    graph.bfs(2);  // Starting BFS from vertex 2
+          }
+}
