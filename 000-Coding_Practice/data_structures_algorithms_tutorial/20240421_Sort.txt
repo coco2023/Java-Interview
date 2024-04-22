@@ -1,4 +1,7 @@
 /**
+https://www.geeksforgeeks.org/adaptive-and-non-adaptive-sorting-algorithms/
+https://www.geeksforgeeks.org/in-place-algorithm/
+
 *  In-Place Sorting & Not-In-Place
 **/ 
 // In-Place Sorting sort the data within the same array
