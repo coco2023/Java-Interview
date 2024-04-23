@@ -1,0 +1,132 @@
+class Solution {
+          /**
+          * Kth problems
+          **/
+          // 215. Kth Largest Element in an Array
+          public int findKthLargest (int[] nums, int k) {
+                    PriorityQueue<Integer> minHeap = new PriorityQueue<>();
+                    for (int num : nums) {
+                              minHeap.add(num);
+                              if (minHeap.size() > k) {
+                                        minHeap.poll();
+                              }
+                    }
+                    return minHeap.peek();
+          }
+
+          // 347. Top K Frequent Elements
+          public ArrayList<Integer> topKFrequent (int[] nums, int k) {
+                    Map<Integer, Integer> freqMap = new HashMap<>();
+                    for (int num : nums) {
+                              freqMap.put(num, freqMap.getOrDefault(num, 0) + 1);
+                    }
+
+                    PriorityQueue<Integer> minHeap = new PriorityQueue<>(
+                              (n1, n2) -> freqMap.get(n1) - freqMap.get(n2)
+                    );
+
+                    for (int num : freqMap.keySet()) {
+                              minHeap.add(num);
+                              if (minHeap.size() > k) {
+                                        minHeap.poll();
+                              }
+                    }
+                    
+                    ArrayList<Integer> result = new ArrayList<>();
+                    while (!minHeap.isEmpty()) {
+                              result.add(minHeap.poll());
+                    }
+                    return result;
+          }
+
+          // 703. Kth Largest Element in a Stream
+          class KthLargest {
+                    private int k;
+                    private PriorityQueue<Integer> minHeap;
+                    
+                    public KthLargest (int k, int[] nums) {
+                              this.k = k;
+                              this.minHeap = new PriorityQueue<>();
+                              for (int num : nums) {
+                                        add(num);
+                              }
+                    }
+
+                    public int add (int val) {
+                              minHeap.add(val);
+                              if (minHeap.size() > k) {
+                                        minHeap.poll();
+                              }
+                              return minHeap.peek();
+                    }
+          }
+
+          // 23. Merge k Sorted Lists
+          public ListNode mergeKList (ListNode[] lists) {
+                    if (lists == null || lists.length == 0) return null;
+
+                    ListNode dummy = new ListNode(0);
+                    ListNode tail = dummy;
+
+                    PriorityQueue<ListNode> queue = new PriorityQueue<>(
+                              lists.length, (a, b) -> a.val - b.val
+                    ); 
+
+                    for (ListNode node : lists) {
+                              if (node != null) queue.add(node);
+                    }
+
+                    while (!queue.isEmpty()) {
+                              tail.next = queue.poll();
+                              tail = tail.next;
+
+                              if (tail.next != null) queue.add(tail.next);
+                    }
+                    return dummy.next;
+          }
+
+          // 378. Kth Smallest Element in a Sorted Matrix
+          public int kthSmalest (int[][] matrix, int k) {
+                    PriorityQueue<int[]> minHeap = new PriorityQueue<>((a, b) -> a[0] - b[0]);
+                    int n = matrix.length;
+
+                    for (int i = 0; i < n; i++) {
+                              minHeap.add(new int[]{matrix[i][0], i, 0});
+                    }
+
+                    int result = 0;
+                    for (int i = 0; i < k; i++) {
+                              int[] curr = minHeap.poll();
+                              result = curr[0];
+                              if (curr[2] < n - 1) {
+                                        minHeap.add(new int[]{matrix[curr[1]][curr[2] + 1], curr[1], curr[2] + 1});
+                              }
+                    }
+                    return result;
+          }
+
+          // 668. Kth Smallest Number in Multiplication Table
+
+          // 719. Find K-th Smallest Pair Distance
+
+          // 786. K-th Smallest Prime Fraction
+
+
+          // 373. Find K Pairs with Smallest Sums
+
+
+          // 632. Smallest Range Covering Elements from K Lists
+
+          // 786. K-th Smallest Prime Fraction
+
+
+          // 987. Vertical Order Traversal of a Binary Tree
+
+
+          // 1439. Find the Kth Smallest Sum of a Matrix With Sorted Rows
+
+
+          // 1424. Diagonal Traverse II
+
+
+}

@@ -691,6 +691,102 @@ class MinPriorityQueue {
           }
 }
 
+// 寻找二叉树的叶子节点
+class Solution {
+    public List<List<Integer>> findLeaves(TreeNode root) {
+        List<List<Integer>> res = new ArrayList<>();
+        while (root != null) {
+            List list = new ArrayList<>();
+            root = dfs(root, list);
+            res.add(list);
+        }
+        return res;
+  }
+
+    private TreeNode dfs(TreeNode root, List<Integer> list) {
+        if (root == null)
+            return null;
+
+        if (root.left == null && root.right == null) {
+            list.add(root.val);
+            return null;
+        }
+        root.left = dfs(root.left, list);
+        root.right = dfs(root.right, list);
+        return root;
+    }
+}
+
+class Solution {
+   
+   private List<List<Integer>> solution;
+
+   private int getHeight (TreeNode root) {
+      // stop status
+      if (root == null) return -1;
+
+      int leftHeight = getHeight(root.left);
+      int rightHeight = getHeight(root.right);
+      int currentHeight = Math.max(leftHeight, rightHeight) + 1;
+
+      // create new arraylist to save the root.val
+      if (this.solution.size() == currentHeight) {
+        this.solution.add(new ArrayList<>());
+      }
+      this.solution.get(currentHeight).add(root.val);
+
+      return currentHeight;
+   }
+   
+   public List<List<Integer>> findLeaves(TreeNode root) {
+       this.solution = new ArrayList<>();
+       
+       getHeight(root);
+       
+       return this.solution;
+   }
+}
+
+// 1273. 删除树节点
+class TreePruner {
+    public int deleteTreeNodes (int nodes, int[] parent, int[] value) {
+        // create array to represent the tree
+        ArrayList<Integer>[] tree = new ArrayList[nodes];
+        for (int i = 0; i < nodes; i++) {
+            tree[i] = new ArrayList<>();
+        }
+
+        // Populate the tree structure from the parent array
+        for (int i = 1; i < nodes; i++) {
+            tree[parent[i]].add(i);
+        }
+
+        // dfs helper method to perform DFS and calculate the sum of each subtree
+        int[] remaining = new int[1];
+        dfs(0, tree, value, remaining);
+
+        // return the count of remaining nodes after deletions
+        return remaining[0];
+    }
+
+    // Helper DFS method to compute the subtree sums and decide if a node should be deleted
+    private int dfs (int node, ArrayList<Integer>[] tree, int[] value, int[] remaining) {
+        int currentSum = value[node];   // Start with the value of the current node
+        int totalNodes = 1;             // count the current node itself
+
+        // Traverse all children (subtrees)
+        for (int child : tree[node]) {
+            int subtreeSum = dfs(child, tree, value, remaining);
+            currentSum += subtreeSum;
+            if (subtreeSum != 0) totalNodes += remaining[0];  // Only add to total nodes if the subtree sum isn't zero
+        }
+
+        if (currentSum == 0) totalNodes = 0;
+        remaining[0] = totalNodes;
+        return currentSum;
+    }
+}
+
 # Comparable & Comparator
 In Java, the `Comparable` interface and the `Comparator` interface are both used for defining the order of objects, but they serve slightly different purposes and are used in different scenarios. Understanding when to use each can help you write more flexible and reusable code.
 
