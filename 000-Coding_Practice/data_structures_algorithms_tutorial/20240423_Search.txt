@@ -168,3 +168,118 @@ class HashTable {
                     System.out.println("Value for key1: " + ht.search("key1"));
           }
 }
+
+// HashMap
+class CustomHashMap<K, V> {
+
+          private static class HashNode<K, V> {
+                    K key;
+                    V value;
+                    HashNode<K, V> next;
+
+                    public HashNode (K key, V value) {
+                              this.key = key;
+                              this.value = value;
+                    }
+          }
+
+          private List<HashNode<K, V>> bucketArray;
+          private int numBuckets;
+          private int size;
+
+          public CustomHashMap () {
+                    bucketArray = new ArrayList<>();
+                    numBuckets = 10;
+                    size = 0;
+
+                    for (int i = 0; i < numBuckets; i++) {
+                              bucketArray.add(null);
+                    }
+          }
+
+          private int getBucketIndex (K key) {
+                    int hashCode = Objects.hashCode(key);
+                    return (hashCode % numBuckets);
+          }
+
+          public V get (K key) {
+                    int bucketIndex = getBucketIndex(key);
+                    HashNode<K, V> head = bucketArray.get(bucketIndex);
+
+                    while (head != null) {
+                              if (head.key.equals(key)) {
+                                        return head.value;
+                              }
+                              head = head.next;
+                    }
+                    return null;
+          }
+
+          public void add (K key, V value) {
+                    int bucketIndex = getBucketIndex(key);
+                    HashNode<K, V> head = bucketArray.get(bucketIndex);
+
+                    // Check if key is already present
+                    while (head != null) {
+                              if (head.key.equals(key)) {
+                                        head.value = value;
+                                        return;
+                              }
+                              head = head.next;
+                    }
+
+                    // Insert key in chain
+                    size++;
+                    head = bucketArray.get(bucketIndex);
+                    HashNode<K, V> newNode = new HashNode<>(key, value);
+                    newNode.next = head;
+                    bucketArray.set(bucketIndex, newNode);
+
+                    // If load factor goes beyond threshold, then double hash table size
+                    if ((1.0 * size) / numBuckets >= 0.7) {
+                              List<HashNode<K, V>> temp = bucketArray;
+                              bucketArray = new ArrayList<>();
+                              numBuckets = 2 * numBuckets;
+                              size = 0;
+                              for (int i = 0; i < numBuckets; i++) {
+                                        bucketArray.add(null);
+                              }
+
+                              for (HashNode<K, V> headNode : temp) {
+                                        while (headNode != null) {
+                                                  add(headNode.key, headNode.value);
+                                                  headNode = headNode.next;
+                                        }
+                              }
+                    }
+          }
+
+          public V remove (K key) {
+                    int bucketIndex = getBucketIndex(key);
+                    HashNode<K, V> head = bucketArray.get(bucketIndex);
+                    HashNode<K, V> prev = null;
+
+                    while (head != null) {
+                              if (head.key.equals(key)) break;
+
+                              prev = head;
+                              head = head.next;
+                    }
+                    
+                    if (head == null) return null;
+                    size--;
+
+                    if (prev != null) prev.next = head.next;
+                    else bucketArray.set(bucketIndex, head.next);
+
+                    returm head.value;
+          }
+
+          public int size () {
+                    return size;
+          }
+
+          public boolean isEmpty () {
+                    return size == 0;
+          }
+}

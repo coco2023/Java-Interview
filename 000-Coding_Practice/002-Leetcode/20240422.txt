@@ -129,4 +129,40 @@ class Solution {
           // 1424. Diagonal Traverse II
 
 
+          // Linear Search
+          // Best Time to Buy and Sell Stock II (122)
+
+          // Move Zeroes (283)
+
+          // Find All Numbers Disappeared in an Array (448)
+          
+          // Find Smallest Letter Greater Than Target (744)
+
+          // Binary Search (704)
+
+
+          // First Bad Version (278)
+
+
+          // Search in Rotated Sorted Array (33)
+          
+          // Find Minimum in Rotated Sorted Array (153)
+
+          // Capacity To Ship Packages Within D Days (1011)
+
+          // Hash-based Search
+          // Group Anagrams (49)
+
+          // Longest Consecutive Sequence (128)
+
+          // Subarray Sum Equals K (560)
+
+          // Contains Duplicate (217)
+
+          // Two Sum (1)
+
+          // Interpolation Search
+          
+          // Time-Based Key-Value Store (981)
+
 }
