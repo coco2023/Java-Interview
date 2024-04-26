@@ -106,28 +106,269 @@ class Solution {
           }
 
           // 668. Kth Smallest Number in Multiplication Table
+          // Kth largest: m * n - k + 1 th smallest
+          public int findKthNumber (int m, int n, int k) {
+                    if (k > m * n) return -1;
+
+                    int left = 1, right = m * n;
+                    while (left < right) {
+                              int mid = left + (right - left) / 2;
+                              int count = 0;
+                              for (int i = 1; i <= m; i++) {
+                                        count += Math.min(mid / i, n); // mid / i gives the max possible value in row i that is <= mid
+                              }
+                              if (count < k) left = mid + 1;
+                              else right = mid;
+                    }
+                    return left;
+          }
 
           // 719. Find K-th Smallest Pair Distance
+          public List<List<Integer>> kSmallestPairs (int[] nums1, int[] nums2, int k) {
+                    if (nums1 == null || nums2 == null) return null;
+
+                    PriorityQueue<int[]> queue = new PriorityQueue<>((a, b) -> a[0] + a[1] - b[0] - b[1]);
+                    List<List<Integer>> res = new ArrayList<>();
+
+                    for (int i = 0; i < nums1.length && i < k; i++) {
+                              queue.offer(new int[]{nums1[i], nums2[0], 0});
+                    }
+
+                    while (k > 0 && !queue.isEmpty()) {
+
+                              int[] curr = queue.poll();
+                              List<Integer> pair = new ArrayList<>();
+                              pair.add(curr[0]);
+                              pair.add(curr[1]);
+                              res.add(pair);
+
+                              if (curr[2] + 1 < nums2.length) {
+                                        queue.offer(new int[]{curr[0], nums2[curr[2] + 1], curr[2] + 1});
+                              }
+                              k--;
+                    }
+                    return res;
+          }
+          
+          // 719. 找出第 K 小的数对距离
+          public int smallestDistancePair (int[] nums, int k) {
+                    Arrays.sort(nums);
+                    
+                    int n = nums.length, low = 0, high = nums[n - 1] - nums[0];
+                    while (low < high) {
+                              int mid = low + (high - low) / 2;
+                              int count = 0;
+                              int left = 0;
+                              for (int right = 0; right < n; right++) {
+                                        while (nums[right] - nums[left] > mid) left++;
+                                        count += right - left;
+                              }
+
+                              if (count < k) low = mid + 1;
+                              else high = mid;
+                    }
+                    return low;
+          }
+
 
           // 786. K-th Smallest Prime Fraction
+          public int[] kthSmallestFraction (int[] arr, int k) {
+                    int n = arr.length;
+                    PriorityQueue<int[]> queue = new PriorityQueue<>((a, b) -> arr[a[0]] * arr[b[1]] - arr[a[1]] * arr[b[0]]);
 
+                    for (int i = 0; i < n - 1; i++) {
+                              queue.offer(new int[] {i, n - 1});
+                    }
+                    
+                    while (k > 1) {
+                              int[] curr = queue.poll();
+                              int i = curr[0], j = curr[1];
+                              if (j - 1 > i) queue.offer(new int[] {i, j - 1});
+                              k--;
+                    }
 
-          // 373. Find K Pairs with Smallest Sums
+                    return new int[] {arr[queue.peek()[0]], arr[queue.peek()[1]]};
+          }
 
+          // 23. Merge k Sorted Lists
+          public ListNode mergeKLists (ListNode[] lists) {
+                    if (lists == null || lists.length == 0) return null;
+
+                    PriorityQueue<ListNode> queue = new PriorityQueue<>((a, b) -> a.val - b.val);
+                    for (ListNode node : lists) {
+                              if (node != null) queue.offer(node);            
+                    }
+
+                    ListNode dummy = new ListNode(0);
+                    ListNode curr = dummy;
+                    while (!queue.isEmpty()) {
+                              curr.next = queue.poll();
+                              curr = curr.next;
+                              if (curr.next != null) {
+                                        queue.offer(curr.next);
+                              }
+                    }
+                    return dummy.next;
+          }
 
           // 632. Smallest Range Covering Elements from K Lists
+          public int[] smallestRange (List<List<Integer>> nums) {
+                    PriorityQueue<Element> queue = new PriorityQueue<>();
+                    int max = Integer.MIN_VALUE, minRange = Integer.MAX_VALUE;
+                    int start = -1, end = -1;
 
-          // 786. K-th Smallest Prime Fraction
+                    for (int i = 0; i < nums.size(); i++) {
+                              Element e = new Element(i, 0, nums.get(i).get(0));
+                              pq.offer(e);
+                              max = Math.max(max, nums.get(i).get(0));
+                    }
 
+                    while (queue.size() == nums.size()) {
+                              Element e = queue.poll();
+                              if (max - e.val < minRange) {
+                                        minRange = max - e.val;
+                                        start = e.val;
+                                        end = max;
+                              }
+                              if (e.idx + 1 < nums.get(e.row).size()) {
+                                        e.idx += 1;
+                                        e.val = nums.get(e.row).get(e.idx);
+                                        queue.offer(e);
+                                        if (e.val > max) max = e.val;
+                              }
+                    }
+                    return new int[] {start, end};
+          }
+
+          class Element {
+                    int row;
+                    int idx;
+                    int val;
+
+                    public Element (int row, int idx, int val) {
+                              this.row = row;
+                              this.idx = idx;
+                              this.val = val;
+                    }
+          }
 
           // 987. Vertical Order Traversal of a Binary Tree
+          public List<List<Integer>> vertialTraversakTree (TreeNode root) {
+                    TreeMap<Integer, TreeMap<Integer, PriorityQueue<Integer>>> map = new TreeMap<>();
+                    dfs(root, 0, 0, map);
+                    List<List<Integer>> list = new ArrayList<>();
+                    for (TreeMap<Integer, PriorityQueue<Integer>> ys : map.values()) {
+                              list.add(new ArrayList<>());
+                              for (PriorityQueue<Integer> nodes : ys.values()) {
+                                        while (!nodes.isEmpty()) {
+                                                  list.get(list.size() - 1).add(nodes.poll());
+                                        }
+                              }
+                    }
+                    return list;
+          }
+          
+          private void dfs(TreeNode node, int x, int y, TreeMap<Integer, TreeMap<Integer, PriorityQueue<Integer>>> map) {
+                    if (node != null) {
+                              map.putIfAbsent(x, new TreeMap<>());
+                              map.get(x).putIfAbsent(y, new PriorityQueue<>());
+                              map.get(x).get(y).offer(node.val);
+                              dfs(node.left, x - 1, y + 1, map);
+                              dfs(node.right, x + 1, y + 1, map);
+                    }
+          }
 
 
           // 1439. Find the Kth Smallest Sum of a Matrix With Sorted Rows
+          public int kthSmalestInMatrix (int[][] mat, int k) {
+                    int m = mat.length, n = mat[0].length;
+                    PriorityQueue<Tuple> queue = new PriorityQueue<>();
+                    int[] idx = new int[m];
+                    int initSum = 0;
+                    for (int i = 0; i < m; i++) {
+                              initSum += mat[i][0];
+                    }
+                    queue.offer(new Tuple(initSum, idx.clone()));
 
+                    while (k > 1) {
+                              Tuple curr = queue.poll();
+                              for (int i = 0; i < m; i++) {
+                                        if (curr.idx[i] + 1 < n) {
+                                                  int[] newIdx = curr.idx.clone();
+                                                  newIdx[i]++;
+                                                  int newSum = curr.sum - mat[i][curr.idx[i]] + mat[i][newIdx[i]];
+                                                  Tuple newTuple = new Tuple(newSum, newIdx);
+                                                  if (!queue.contains(newTuple)) {
+                                                            queue.offer(newTuple);
+                                                  }
+                                        }
+                              }
+                              k--;
+                    }
+                    return queue.poll().sum;
+          }
+          class Tuple implements Comparable<Tuple> {
+                    int sum;
+                    int[] idx;
+
+                    public Tuple (int sum, int[] idx) {
+                              this.sum = sum;
+                              this.idx = idx;
+                    }
+
+                    @Override
+                    public int hashCode () {
+                              int result = sum;
+                              for (int i = 0; i < idx.length; i++) {
+                                        result = 31 * result + idx[i];
+                              }
+                              return result;
+                    }
+
+                    @Override
+                    public int compareTo (Tuple that) {
+                              return this.sum - that.sum;
+                    }
+
+                    @Override
+                    public boolean equals (Object o) {
+                              if (this == o) return true;
+                              if (!(o instanceof Tuple)) return false;
+                              Tuple tuple = (Tuple) o;
+                              if (this.sum != tuple.sum) return false;
+                              for (int i = 0; i < this.idx.length; i++) {
+                                        if (this.idx[i] != tuple.idx[i]) return false;
+                              }
+                              return true;
+                    }
+          }
 
           // 1424. Diagonal Traverse II
+          public int[] findDiagonalOrder (List<List<Integer>> nums) {
+                    Map<Integer, List<Integer>> map = new HashMap<>();
+                    int count = 0;
 
+                    for (int i = 0; i < nums.size(); i++) {
+                              for (int j = 0; j < nums.get(i).size(); j++) {
+                                        map.putIfAbsent(i + j, new ArrayList<>());
+                                        map.get(i + j).add(nums.get(i).get(j));
+                                        count++;
+                              }
+                    }
+
+                    int[] result = new int[count];
+                    int idx = 0;
+                    for (int key = 0; key <= map.size(); key++) {
+                              List<Integer> values = map.get(key);
+                              if (values != null) {
+                                        Collections.reverse(values);
+                                        for (int val : values) {
+                                                  result[idx++] = val;
+                                        }
+                              }
+                    }
+                    return result;
+          }
 
           // Linear Search
           // Best Time to Buy and Sell Stock II (122)
