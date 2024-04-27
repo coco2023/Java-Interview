@@ -1,0 +1,122 @@
+# GPT Practice
+1. https://chat.openai.com/share/a1899c33-99e9-4fc7-8f69-80dc714a2bb9
+
+# Practice
+1. 两个线程交替打印两个数组，类似于 [1, 2, 3, 4] 和 [9, 8, 7, 6] 打印成 [1, 9, 2, 8, 3, 7, 4, 6]
+// 使用 Java 中的 synchronized 关键字来实现线程间的协作
+// 两个线程交替使用一个共享对象lock来控制打印顺序，确保交替进行。
+// Object lock: This is a shared object used as a monitor.The threads synchronize on this object to ensure that only one thread can execute a block of code that manipulates shared resources (in this case, the console output) at a time.
+// notify() wakes up a single thread that is waiting on this object's monitor. If any threads are waiting on this object, one of them is chosen to be awakened.
+// Without synchronization (using wait and notify inside synchronized blocks), both threads could attempt to print at the same time, leading to jumbled output.
+// The use of wait() and notify() minimizes CPU usage compared to a busy-wait approach. Threads that cannot do useful work (because they must wait for their turn) relinquish the CPU to other threads.
+// Monitor Lock: In Java, each object has an intrinsic lock or monitor lock. When a synchronized method or block is entered, the lock is acquired, and when the thread exits the synchronized method or block, the lock is released
+
+// Thread t1 starts and acquires the lock on lock, prints an element from array1, calls notify(), and then goes into a wait state by calling wait(). This releases the lock, allowing t2 to acquire it.
+// Once t1 calls notify(), t2 attempts to acquire the lock
+
+// CPU and JVM Interaction during wait/notify:
+// wait(): When a thread calls wait() on the object, it releases the lock on that object and enters the waiting state. This state change is managed by the JVM, which communicates with the OS to suspend the thread's execution, allowing the CPU to allocate resources to other runnable threads. This helps in efficient CPU utilization.
+// notify(): This method wakes up one of the threads (if any) that are waiting on the object's monitor. The thread that wakes up will compete for the lock on the object; once it acquires the lock, it resumes execution.
+
+class AlternatePrinter {
+          public static void main (String[] args) {
+                    int[] array1 = {1, 2, 3, 4};
+                    int[] array2 = {9, 8, 7, 6};
+
+                    Object lock = new Object();
+
+                    Thread t1 = new Thread(() -> {
+                              for (int i = 0; i < array1.length; i++) {         
+                                        synchronized (lock) {                             // Thread t1 first aquired the lock obj and print the array1 value;
+                                                  System.out.println(array1[i]);
+                                                  lock.notify();                          // After print array1 value, it calls notify() to wake up t2, and goes into a wait state unless it is the last element;
+                                                  try {
+                                                            if (i < array1.length - 1) {
+                                                                      lock.wait();        // t1 wake up t2 and it will goes into wait() state.
+                                                            }
+                                                  } catch (InterruptedException e) {
+                                                            Thread.currentThread().interrupt();
+                                                  }
+                                        }
+                              }
+                    });
+
+                    Thread t2 = new Thread(() -> {
+                              for (int i = 0; i < array2.length; i++) {
+                                        synchronized (lock) {                   
+                                                  try {
+                                                            lock.wait();                  // Thread t2 is initially in a wait state until t1 wakes it up
+                                                  } catch (InterruptedException e) {
+                                                            Thread.currentThread().interrupt();
+                                                  }
+                                                  System.out.println(array2[i]);          // Once t2 is awaked by t1, it will print element in array2
+                                                  lock.notify();                          // then, t2 will wake up t1
+                                        }
+                              }
+                    });
+
+                    t1.start();
+                    t2.start();
+          }
+}
+
+2. 在Java中实现多个用户抢红包的程序涉及到线程安全和并发控制的问题
+// draw(): A synchronized method that allows a thread to draw a random portion of the remaining amount in the red packet. Synchronization is crucial here to prevent race conditions, where multiple threads could attempt to draw money simultaneously, leading to incorrect calculations of the remaining amount
+
+class RedPacket {
+          private double totalAmounts;
+          private double remainingAmounts;
+
+          public RedPacket (double totalAmount) {
+                    this.totalAmount  = totalAmount;
+                    this.remainingAmount = remainingAmount;
+          }
+
+          public synchronized double draw () {
+                    if (remainingAmount > 0) {
+                              double maxDraw = remainingAmount * 0.2;
+                              double drawnAmount = ThreadLocalRandom.current().nextDouble(0.01, maxDraw);
+                              remainingAmount -= drawnAmount;
+                              return drawnAmount;
+                    } else {
+                              return 0.0;
+                    }
+          }
+
+          public double getRemainingAmount () {
+                    return remainingAmounts;
+          }
+}
+class RedPacketGrabber {
+          public static void main (String[] args) {
+                    final RedPacket redPacket = new RedPacket(100.0);
+
+                    for (int i = 0; i < 10; i++) {
+                              new Thread(() -> {
+                                        double amount = redPacket.draw();
+                                        if (amount > 0) {
+                                                  System.out.prinln(Thread.currentThread().getName() + "get " + amount + "CNY");
+                                        } else {
+                                                  System.out.println(Thread.currentThread().getName() + "none");
+                                        }
+                              }, "Person " + (i + 1)).start(); 
+                    }
+          }
+}
+
+3. 10个 100g 日志文件寻找 TOP100 query，一台机器有 10G 内存，可以使用多台机器
+对于处理大数据文件并在内存限制的条件下找到最常见的查询，可以采用 MapReduce 框架来处理。以下是一个高级概述，描述了如何在多台机器上使用 Java 实现这个任务：
+
+1. **分割日志文件**：首先，将每个 100GB 的日志文件分割成更小的块，比如说每个块1GB，这样每个块可以单独在一台机器上处理。
+
+2. **Map阶段**：每台机器读取一个或多个1GB的块，对每个查询进行计数并存储在本地。这可以通过哈希表来实现。
+
+3. **Shuffle阶段**：将所有机器上处理的数据按照查询关键字的哈希值进行分组，相同的查询会被发送到同一台机器上进行最终统计。
+
+4. **Reduce阶段**：每台机器收到属于它的查询后，合并同一个查询的计数，然后找出每台机器上计数最高的100个查询。
+
+5. **合并结果**：将所有机器上的top 100查询结果合并，再次进行排序和筛选，得到最终的全局TOP100查询。
+
+这种方法需要考虑网络传输、磁盘IO和内存使用等多种资源，因此在实际部署时需要根据具体环境进行调优。
+
+
