@@ -1,0 +1,138 @@
+start（）方法来启动线程，真正实现了多线程运行。这时无需等待 run 方法体代码执行完毕， 可以直接继续执行下面的代码
+5.线程则是 JVM 级别的，以 Tomcat 为例，如果你在 Web 应用中启动一个线程，这个线程的生命周期并不会和 Web 应用程序保持同步。也就是说，即使你停止了 Web 应用，这个线程 依旧是活跃的。
+6.example: 垃圾回收线程就是一个经典的守护线程，当我们的程序中不再有任何运行的 Thread,程序就不会再产生垃圾，垃圾回收器也就无事可做，所以当垃圾回收线程是 JVM 上仅剩的线程时，垃圾回收线程会自动离开。它始终在低级别的状态中运行，用于实时监控和管理系统 中的可回收资源
+
+自旋锁原理非常简单，如果持有锁的线程能在很短时间内释放锁资源，那么那些等待竞争锁的线程就不需要做内核态和用户态之间的切换进入阻塞挂起状态，它们只需要等一等（自旋）， 等持有锁的线程释放锁后即可立即获取锁，这样就避免用户线程和内核的切换的消耗。
+自旋锁原理非常简单，如果持有锁的线程能在很短时间内释放锁资源，那么那些等待竞争锁的线程就不需要做内核态和用户态之间的切换进入阻塞挂起状态，它们只需要等一等（自旋）， 等持有锁的线程释放锁后即可立即获取锁，这样就避免用户线程和内核的切换的消耗。
+如果持有锁的线程执行的时间超过自旋等待的最大时间扔没有释放锁，就会导致其它争用锁  的线程在最大等待时间内还是获取不到锁，这时争用线程会停止自旋进入阻塞状态。
+因为自旋的消耗会小于线程阻塞挂起再唤醒的操作的消耗，这些操作会 导致线程发生两次上下文切换！
+
+分段锁也并非一种实际的锁，而是一种思想 ConcurrentHashMap 是学习分段锁的最好实践
+
+4.1.13.4.Java 线程池工作过程
+
+4.1.14.JAVA 阻塞队列原理
+在Java中，阻塞队列（Blocking Queue）是一种支持两个附加操作的队列。这两个操作包括：当队列为空时，获取元素的线程会被阻塞，直到队列中有新的元素可供使用；当队列满时，添加新元素的线程会被阻塞，直到队列中有空间可供添加新元素。这使得阻塞队列成为生产者-消费者问题的理想选择。
+
+### Java中的阻塞队列接口
+
+Java的`java.util.concurrent`包提供了`BlockingQueue`接口，它扩展了`Queue`接口。下面是一些实现了`BlockingQueue`接口的重要类：
+
+- **`ArrayBlockingQueue`**：一个由数组支持的有界阻塞队列。
+- **`LinkedBlockingQueue`**：一个由链表结构支持的可选有界（默认情况下，界限为`Integer.MAX_VALUE`）阻塞队列。
+- **`PriorityBlockingQueue`**：一个支持优先级排序的无界阻塞队列。
+- **`DelayQueue`**：一个使用优先级队列实现的无界阻塞队列，内部元素只能在其指定的延迟时间过后才能取出。
+- **`SynchronousQueue`**：一个不存储元素的阻塞队列。每个插入操作必须等待另一个线程的移除操作，反之亦然。
+- **`LinkedTransferQueue`**：一个由链表结构组成的无界阻塞队列。
+- **`LinkedBlockingDeque`**：一个由链表结构支持的可选有界阻塞双端队列（Deque）。
+
+### 主要方法
+
+阻塞队列提供了四种处理元素的方式：
+
+1. **抛出异常**：
+   - `add(e)`：如果队列已满，抛出`IllegalStateException`。
+   - `remove()`：如果队列为空，抛出`NoSuchElementException`。
+   - `element()`：检索但不移除此队列的头；如果队列为空，则抛出`NoSuchElementException`。
+
+2. **特殊值**：
+   - `offer(e)`：如果队列已满，则返回`false`。
+   - `poll()`：如果队列为空，则返回`null`。
+   - `peek()`：检索但不移除此队列的头；如果队列为空，则返回`null`。
+
+3. **阻塞操作**：
+   - `put(e)`：如果队列满，等待空间变得可用。
+   - `take()`：如果队列为空，等待元素变得可用。
+
+4. **超时退出**：
+   - `offer(e, time, unit)`：如果队列满，则在给定的时间内等待空间变得可用，时间一到，返回`false`。
+   - `poll(time, unit)`：如果队列为空，在给定的时间内等待元素变得可用，时间一到，返回`null`。
+
+### 使用示例
+
+下面是一个使用`ArrayBlockingQueue`的简单示例，演示生产者-消费者模式：
+
+```java
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.BlockingQueue;
+
+public class ProducerConsumerExample {
+    public static void main(String[] args) {
+        BlockingQueue<Integer> queue = new ArrayBlockingQueue<>(10);
+
+        // 生产者线程
+        Thread producer = new Thread(() -> {
+            try {
+                for (int i = 0; i < 20; i++) {
+                    queue.put(i);
+                    System.out.println("Produced: " + i);
+                }
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        });
+
+        // 消费者线程
+        Thread consumer = new Thread(() -> {
+            try {
+                while (true) {
+                    Integer value = queue.take();
+                    System.out.println("Consumed: " + value);
+                    Thread.sleep(1000);
+                }
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        });
+
+        producer.start();
+        consumer.start();
+    }
+}
+```
+
+这个例子中，生产者不断地将元素放入队列中，而消费者从队列中取出元素。如果队列满，生产者线程会等待；如果队列空，消费者线程会等待。这种方式有效地协调了生产者和消费者之间的速度差异。
+
+4.1.17. 如何在两个线程之间共享数据
+
+4.1.20.2.ConcurrentHashMap 分段锁
+ConcurrentHashMap 是由 Segment 数组结构和 HashEntry 数组结构组成
+https://github.com/openjdk-mirror/jdk7u-jdk/blob/master/src/share/classes/java/util/concurrent/ConcurrentHashMap.java
+
+
+
+4.1.21.Java 中用到的线程调度
+抢占式调度指的是每条线程执行的时间、线程的切换都由系统控制。在这种机制下，一个线程的堵塞不会导致整个进程堵塞。
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
