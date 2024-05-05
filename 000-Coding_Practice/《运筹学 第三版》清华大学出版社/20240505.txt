@@ -1,0 +1,16 @@
+// 汉诺塔
+class Solution {
+          public void hanata(List<Integer> A, List<Integer> B, List<Integer> C) {
+                    if (A.isEmpty()) throw new IllegalArgumentException("Source rod cannot be empty.");
+                    int n = A.size() - 1;
+                    hanoi(n, A, B, C);
+          }
+
+          private void hanoi(int n, List<Integer> from, List<Integer> to, List<Integer> temp) {
+                    if (n >= 0) {
+                              hanoi(n - 1, from, temp, to);
+                              temp.add(from.remove(from.size() - 1));
+                              hanoi(n - 1, temp, tp, from);
+                    }
+          }
+}

@@ -4,6 +4,45 @@ https://www.geeksforgeeks.org/in-place-algorithm/
 
 *  In-Place Sorting & Not-In-Place
 **/ 
+1. **`.length`**:
+   - **Arrays**: Use `.length` for arrays (both primitive and object arrays). It is a public final field of an array that contains the number of elements it can hold, not a method.
+   ```java
+   int[] myArray = {1, 2, 3};
+   int length = myArray.length; // Correct usage
+   ```
+
+2. **`.length()`**:
+   - **Strings**: For `String` objects, use `.length()` to get the number of characters in the string. It's a method of the `String` class.
+   ```java
+   String myString = "Hello";
+   int length = myString.length(); // Correct usage
+   ```
+
+3. **`.size()`**:
+   - **Collections** (like `ArrayList`, `LinkedList`, `HashSet`, `HashMap`, etc.): Use `.size()` to find out how many elements are in the collection. It's a method provided by the `Collection` interface and implemented by collection classes.
+   ```java
+   ArrayList<Integer> myList = new ArrayList<>();
+   myList.add(1);
+   myList.add(2);
+   int size = myList.size(); // Correct usage
+   ```
+
+4. **`.size`**:
+   - This is not a standard property or method in Java's built-in classes. If you see `.size` being used, it could be referring to a public field named `size` in a custom class, not a method. This is less common and generally not a good practice as it exposes the internal details of a class. Instead, a getter method (like `.getSize()`) would typically be used to encapsulate this information.
+   ```java
+   class CustomClass {
+       public int size = 5; // Not typical or recommended in Java without encapsulation
+   }
+   CustomClass myCustom = new CustomClass();
+   int size = myCustom.size; // Possible usage in a custom class
+   ```
+
+### Summary
+- Use `.length` for arrays.
+- Use `.length()` for strings.
+- Use `.size()` for collections.
+- Be cautious with `.size`, it could be a custom field in a user-defined class, not a built-in feature of Java. Always prefer using getter methods to directly accessing fields to maintain good encapsulation practices.
+
 // In-Place Sorting sort the data within the same array
 class InsertionSort {
           public void sort (int[] array) {
@@ -58,6 +97,59 @@ class MergeSort {
                               result[k++] = right[j++];
                     }
           }
+}
+class MergeSort2 {
+  public void sort(int[] array, int left, int right) {
+    if (left < right) {
+      int mid = left + (right - left) / 2;
+      sort(array, left, mid);
+      sort(array, mid + 1, right);
+
+      merge(array, left, mid, right);
+    }
+  }
+
+  private void merge(int[] array, int left, int mid, int right) {
+    int[] leftArray = new int[mid - left + 1];
+    for (int i = 0; i < leftArray.size(); i++) {
+      leftArray[i] = array[left + i];
+    }
+
+    int[] rightArray = new int[right - mid];
+    for (int i = 0; i < rightArray.size(); i++) {
+      rightArray[i] = array[mid + 1 + i];
+    }
+
+    int i = 0, j = 0, k = left;
+    while (i < leftArray.size() && j < rightArray.size()) {
+      if (leftArray[i] <= rightArray[j]) {
+        array[k] = leftArray[i];
+        i++;
+      } else {
+        array[k] = rightArray[j];
+        j++;
+      }
+      k++;
+    }
+
+    while (i < leftArray.size()) {
+      array[k] = leftArray[i];
+      i++;
+      k++;
+    }
+
+    whlie (j < rightArray.size()) {
+      array[k] = rightArray[i];
+      i++;
+      k++;
+    }
+  }
+
+  public static void main(String[] args) {
+    int[] array = {1, 6, 4, 9, 2, 3};
+    MergeSort2 solution = new MergeSort2();
+    solution.sort(array, 0, array.length - 1);
+  }
 }
 
 /**
@@ -134,6 +226,44 @@ class QuickSort {
                               System.out.println(num + " ");
                     } 
           }
+
+class QuickSort2 {
+  private void swap(int[] array, int i, int j) {
+    int temp = array[j];
+    array[j] = array[i];
+    array[i] = temp;
+  }
+
+  private int partition(int[] array, int start, int end) {
+    int i = start + 1;
+    int pivot = array[start];
+    int j = start + 1;
+    while (j <= end) {
+      if (array[j] < pivot) {
+        swap(array, i, j);
+        i++;
+      }
+      j++;
+    }
+
+    swap(array, start, i - 1);
+    return i - 1; 
+  }
+
+  public void sort(int[] array, int left, int right) {
+    if (left < right) {
+      int pivot = partition(array, left, right);
+      sort(array, left, pivot - 1);
+      sort(array, pivot + 1, right);
+    }
+  }
+
+  public static void main (String[] args) {
+    int[] array = {1, 6, 4, 9, 2, 3};
+    QuickSort2 sort = new QuickSort2();
+    sort.sort(array, 0, array.length - 1);
+  }
+}
 
 /**
 Step 1 − Choose the highest index value has pivot 
