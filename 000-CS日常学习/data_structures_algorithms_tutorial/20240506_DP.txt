@@ -1,0 +1,79 @@
+// https://www.bilibili.com/video/BV1Ri4y1u7em?p=4&spm_id_from=pageDriver&vd_source=f32f321bbed8634e6840f3c2b3b73a15
+
+// N-Queens
+import java.util.ArrayList;
+import java.util.List;
+
+class NQueens {
+    private List<List<String>> solutions = new ArrayList<>();
+
+    public List<List<String>> solveNQueens(int n) {
+        char[][] board = new char[n][n];
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                board[i][j] = '.';
+            }
+        }
+        backtrack(board, 0);
+        return solutions;
+    }
+
+    private void backtrack(char[][] board, int row) {
+        if (row == board.length) {                      //row == length, means reach to the buttom
+            solutions.add(construct(board));
+            return;
+        }
+
+        for (int col = 0; col < board.length; col++) {
+            if (isValid(board, row, col)) {
+                board[row][col] = 'Q';
+                backtrack(board, row + 1);
+                board[row][col] = '.';
+            }
+        }
+    }
+
+    private boolean isValid(char[][] board, int row, int col) {
+        // Check column
+        for (int i = 0; i < row; i++) {
+            if (board[i][col] == 'Q') {
+                return false;
+            }
+        }
+
+        // Check main diagonal
+        for (int i = row - 1, j = col - 1; i >= 0 && j >= 0; i--, j--) {
+            if (board[i][j] == 'Q') {
+                return false;
+            }
+        }
+
+        // Check secondary diagonal
+        for (int i = row - 1, j = col + 1; i >= 0 && j < board.length; i--, j++) {
+            if (board[i][j] == 'Q') {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    private List<String> construct(char[][] board) {
+        List<String> solution = new ArrayList<>();
+        for (char[] row : board) {
+            solution.add(new String(row));
+        }
+        return solution;
+    }
+
+    public static void main(String[] args) {
+        NQueens nQueens = new NQueens();
+        List<List<String>> solutions = nQueens.solveNQueens(4);
+        for (List<String> solution : solutions) {
+            for (String s : solution) {
+                System.out.println(s);
+            }
+            System.out.println();
+        }
+    }
+}
