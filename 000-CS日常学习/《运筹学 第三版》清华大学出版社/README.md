@@ -1,4 +1,9 @@
 
+## 单纯形法
+1. 例题：https://www.bilibili.com/video/BV17N4y1V7XX/?spm_id_from=333.337.search-card.all.click&vd_source=f32f321bbed8634e6840f3c2b3b73a15
+
+2. 单纯形表格：https://www.bilibili.com/video/BV11f4y1x7sK/?spm_id_from=333.337.search-card.all.click&vd_source=f32f321bbed8634e6840f3c2b3b73a15
+
 ## 运输问题
 1. https://www.bilibili.com/video/BV1Ri4y1u7em?p=4&spm_id_from=pageDriver&vd_source=f32f321bbed8634e6840f3c2b3b73a15
 ![](./img/运输问题001-1.png)

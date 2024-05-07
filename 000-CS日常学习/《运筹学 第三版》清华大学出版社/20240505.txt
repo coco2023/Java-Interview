@@ -14,3 +14,151 @@ class Solution {
                     }
           }
 }
+
+// 运输问题
+public class ResourceAllocation {
+
+    public static int maxProfit(int totalResources, int[][] profits) {
+        int numCompanies = profits[0].length;
+        int[] dp = new int[totalResources + 1];
+
+        for (int company = 0; company < numCompanies; company++) {
+            for (int resource = totalResources; resource >= 0; resource--) {
+                for (int used = 0; used <= resource; used++) {
+                    dp[resource] = Math.max(dp[resource], dp[resource - used] + profits[used][company]);
+                }
+            }
+        }
+
+        return dp[totalResources];
+    }
+
+    public static void main(String[] args) {
+        // 假设profits[i][j] 表示第j种产品使用i单位原料可以获得的收益
+        // 表格对应的数组表示如下（产品顺序为：工, 田, 工）
+        int[][] profits = {
+            {0, 0, 0},  // 0单位原料
+            {3, 5, 4},  // 1单位原料
+            {7, 10, 6}, // 2单位原料
+            {9, 11, 11},// 3单位原料
+            {12, 11, 12},// 4单位原料
+            {13, 11, 12} // 5单位原料
+        };
+        
+        int totalResources = 5;
+        System.out.println("Maximum profit: " + maxProfit(totalResources, profits));
+    }
+}
+
+// 最小生成树（Minimum Spanning Tree, MST）
+// Prim算法
+// 最小生成树问题的目的是在一个加权无向图中找到一个边的子集，使得这些边构成的树包含图中的所有顶点，并且所有边的权重之和尽可能小。
+import java.util.*;
+
+class Graph {
+    private int vertices; // 顶点数
+    private List<List<int[]>> adj; // 邻接表，其中 int[] 表示 {邻接顶点, 边的权重}
+
+    public Graph(int vertices) {
+        this.vertices = vertices;
+        adj = new ArrayList<>();
+        for (int i = 0; i < vertices; i++) {
+            adj.add(new ArrayList<>());
+        }
+    }
+
+    private int vertices; // 顶点数
+    private List<List<int[]>> adj; // 邻接表，其中 int[] 表示 {邻接顶点, 边的权重}
+
+    public Graph(int vertices) {
+          this.vertices = vertices;
+          adj = new ArrayList<>();
+          for (int i = 0; i < vertices; i++) {
+                    adj.add(new ArrayList<>());
+          }
+    }
+
+    public viod addEdge(int u, int v, int w) {
+          adj.get(v).add(new int[]{u, w});
+          adj.get(u).add(new int[]{v, w}); // 无向图：双向添加
+    }
+
+    public int printMST() {
+          boolean[] inMST = new boolean[vertices];
+          int[] key = new int[vertices];
+          
+    }
+
+    public static void main(String[] args) {
+          Graph graph = new Graph(6);
+          graph.addEdge(0, 1, 6);
+          graph.addEdge(0, 2, 5);
+          graph.addEdge(1, 2, 1);
+          graph.addEdge(1, 3, 7);
+          graph.addEdge(2, 3, 7);
+          graph.addEdge(2, 4, 4);
+          graph.addEdge(3, 4, 3);
+          graph.addEdge(3, 5, 4);
+          graph.addEdge(4, 5, 4);
+    }
+
+    public void addEdge(int u, int v, int w) {
+        adj.get(u).add(new int[]{v, w});
+        adj.get(v).add(new int[]{u, w}); // 无向图：双向添加
+    }
+
+    public int primMST() {
+        boolean[] inMST = new boolean[vertices];
+        int[] key = new int[vertices];
+        int[] parent = new int[vertices];
+        Arrays.fill(key, Integer.MAX_VALUE);
+        key[0] = 0;
+        parent[0] = -1;
+
+        PriorityQueue<int[]> pq = new PriorityQueue<>(vertices, Comparator.comparingInt(a -> a[1]));
+        pq.add(new int[]{0, 0});
+
+        int result = 0;
+
+        while (!pq.isEmpty()) {
+            int[] minEdge = pq.poll();
+            int u = minEdge[0];
+
+            if (inMST[u]) {
+                continue;
+            }
+
+            inMST[u] = true;
+            result += minEdge[1];
+
+            for (int[] edge : adj.get(u)) {
+                int v = edge[0];
+                int weight = edge[1];
+
+                if (!inMST[v] && weight < key[v]) {
+                    key[v] = weight;
+                    pq.add(new int[]{v, weight});
+                    parent[v] = u;
+                }
+            }
+        }
+
+        return result;
+    }
+
+    public static void main(String[] args) {
+        Graph graph = new Graph(6); // 6个顶点
+        graph.addEdge(0, 1, 6);
+        graph.addEdge(0, 2, 5);
+        graph.addEdge(1, 2, 1);
+        graph.addEdge(1, 3, 7);
+        graph.addEdge(2, 3, 7);
+        graph.addEdge(2, 4, 4);
+        graph.addEdge(3, 4, 3);
+        graph.addEdge(3, 5, 4);
+        graph.addEdge(4, 5, 4);
+
+        System.out.println("Total weight of MST: " + graph.primMST());
+    }
+}
+
