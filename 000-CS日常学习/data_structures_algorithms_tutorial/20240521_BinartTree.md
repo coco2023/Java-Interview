@@ -561,10 +561,6 @@ public class Codec {
             return null;
         }
 
-        if (data == null || data.isEmpty()) {
-            return null;
-        }
-
         String[] nodes = data.split(",");
         TreeNode root = new TreeNode(Integer.parseInt(nodes[0]));
         Queue<TreeNode> queue = new LinkedList<>();
@@ -588,6 +584,50 @@ public class Codec {
         }
 
         return root;
+    }
+}
+```
+
+### 11. Diameter of Binary Tree  LC543
+```java
+public class Solution {
+
+    private int maxDiameter = 0;
+
+    public int diameterOfBinaryTree(TreeNode root) {
+        depth(root);
+        return maxDiameter;
+    }
+
+    private int depth(TreeNode node) {
+        if (node == null) {
+            return 0;
+        }
+
+        int leftDepth = depth(node.left);
+        int rightDepth = depth(node.right);
+
+        // Calculate the diameter passing through this node
+        int diameter = leftDepth + rightDepth;
+
+        // Update the maximum diameter found so far
+        maxDiameter = Math.max(maxDiameter, diameter);
+
+        // Return the depth of this node
+        return Math.max(leftDepth, rightDepth) + 1;
+    }
+
+    public static void main(String[] args) {
+        // Example usage:
+        TreeNode root = new TreeNode(1);
+        root.left = new TreeNode(2);
+        root.right = new TreeNode(3);
+        root.left.left = new TreeNode(4);
+        root.left.right = new TreeNode(5);
+
+        Solution solution = new Solution();
+        int diameter = solution.diameterOfBinaryTree(root);
+        System.out.println("Diameter of the binary tree: " + diameter);  // Output should be 3
     }
 }
 ```
