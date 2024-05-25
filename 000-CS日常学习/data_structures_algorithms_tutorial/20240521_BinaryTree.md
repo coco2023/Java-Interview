@@ -727,11 +727,6 @@ public class Solution {
 
 ### Problem: 剑指 Offer 07. 重建二叉树
 ```java
-
-```
-
-### Problem: 654. Maximum Binary Tree
-```java
 public class Solution {
     private Map<Integer, Integer> inorderMap;
 
@@ -788,9 +783,9 @@ public class Solution {
         return root;
     }
 
-    private int findMaxIndex(int[] nums, int left, int right) {
-        int maxIndex = left;
-        for (int i = left + 1; i <= right; i++) {
+    private int findMaxIndex(int[] nums, int start, int end) {
+        int maxIndex = start;
+        for (int i = start + 1; i <= end; i++) {
             if (nums[i] > nums[maxIndex]) {
                 maxIndex = i;
             }
@@ -872,8 +867,799 @@ public class Solution {
 }
 ```
 
+### 1038. Binary Search Tree to Greater Sum Tree
+```java
+class TreeNode {
+    int val;
+    TreeNode left;
+    TreeNode right;
+    TreeNode(int x) { val = x; }
+}
 
+public class Solution {
+    private int sum = 0;
 
+    public TreeNode bstToGst(TreeNode root) {
+        if (root != null) {
+            bstToGst(root.right);
+            sum += root.val;
+            root.val = sum;
+            bstToGst(root.left);
+        }
+        return root;
+    }
+
+    public static void main(String[] args) {
+        // Example usage:
+        TreeNode root = new TreeNode(4);
+        root.left = new TreeNode(1);
+        root.right = new TreeNode(6);
+        root.left.left = new TreeNode(0);
+        root.left.right = new TreeNode(2);
+        root.left.right.right = new TreeNode(3);
+        root.right.left = new TreeNode(5);
+        root.right.right = new TreeNode(7);
+        root.right.right.right = new TreeNode(8);
+
+        Solution solution = new Solution();
+        TreeNode newRoot = solution.bstToGst(root);
+
+        // Output the new tree values (in-order)
+        printInOrder(newRoot);
+    }
+
+    private static void printInOrder(TreeNode root) {
+        if (root == null) {
+            return;
+        }
+        printInOrder(root.left);
+        System.out.print(root.val + " ");
+        printInOrder(root.right);
+    }
+}
+```
+
+### 230. Kth Smallest Element in a BST
+```java
+public class Solution {
+    private int count = 0;
+    private int result = 0;
+
+    public int kthSmallest(TreeNode root, int k) {
+        inOrder(root, k);
+        return result;
+    }
+
+    private void inOrder(TreeNode node, int k) {
+        if (node == null) {
+            return;
+        }
+        inOrder(node.left, k);
+        count++;
+        if (count == k) {
+            result = node.val;
+            return;
+        }
+        inOrder(node.right, k);
+    }
+
+    public static void main(String[] args) {
+        // Example usage:
+        TreeNode root = new TreeNode(3);
+        root.left = new TreeNode(1);
+        root.right = new TreeNode(4);
+        root.left.right = new TreeNode(2);
+
+        Solution solution = new Solution();
+        int k = 1;  // Example: finding the 1st smallest element
+        int kthSmallest = solution.kthSmallest(root, k);
+        System.out.println("Kth smallest element is: " + kthSmallest);  // Output should be 1
+    }
+}
+```
+
+### 538. Convert BST to Greater Tree
+```java
+public class Solution {
+    private int sum = 0;
+
+    public TreeNode convertBST(TreeNode root) {
+        if (root != null) {
+            convertBST(root.right);
+            sum += root.val;
+            root.val = sum;
+            convertBST(root.left);
+        }
+        return root;
+    }
+
+    public static void main(String[] args) {
+        // Example usage:
+        TreeNode root = new TreeNode(4);
+        root.left = new TreeNode(1);
+        root.right = new TreeNode(6);
+        root.left.left = new TreeNode(0);
+        root.left.right = new TreeNode(2);
+        root.left.right.right = new TreeNode(3);
+        root.right.left = new TreeNode(5);
+        root.right.right = new TreeNode(7);
+        root.right.right.right = new TreeNode(8);
+
+        Solution solution = new Solution();
+        TreeNode newRoot = solution.convertBST(root);
+
+        // Output the new tree values (in-order)
+        printInOrder(newRoot);
+    }
+
+    private static void printInOrder(TreeNode root) {
+        if (root == null) {
+            return;
+        }
+        printInOrder(root.left);
+        System.out.print(root.val + " ");
+        printInOrder(root.right);
+    }
+}
+```
+
+### LCR 054. 把二叉搜索树转换为累加树
+```java
+public class Solution {
+    private int sum = 0;
+
+    public TreeNode convertBST(TreeNode root) {
+        if (root != null) {
+            convertBST(root.right);
+            sum += root.val;
+            root.val = sum;
+            convertBST(root.left);
+        }
+        return root;
+    }
+
+    public static void main(String[] args) {
+        // Example usage:
+        TreeNode root = new TreeNode(4);
+        root.left = new TreeNode(1);
+        root.right = new TreeNode(6);
+        root.left.left = new TreeNode(0);
+        root.left.right = new TreeNode(2);
+        root.left.right.right = new TreeNode(3);
+        root.right.left = new TreeNode(5);
+        root.right.right = new TreeNode(7);
+        root.right.right.right = new TreeNode(8);
+
+        Solution solution = new Solution();
+        TreeNode newRoot = solution.convertBST(root);
+
+        // Output the new tree values (in-order)
+        printInOrder(newRoot);
+    }
+
+    private static void printInOrder(TreeNode root) {
+        if (root == null) {
+            return;
+        }
+        printInOrder(root.left);
+        System.out.print(root.val + " ");
+        printInOrder(root.right);
+    }
+}
+```
+
+### 450. Delete Node in a BST
+```java
+class TreeNode {
+    int val;
+    TreeNode left;
+    TreeNode right;
+    TreeNode(int x) { val = x; }
+}
+
+public class Solution {
+    public TreeNode deleteNode(TreeNode root, int key) {
+        if (root == null) {
+            return null;
+        }
+
+        if (key < root.val) {
+            root.left = deleteNode(root.left, key);
+        } else if (key > root.val) {
+            root.right = deleteNode(root.right, key);
+        } else {
+            // Node to be deleted found
+            if (root.left == null) {
+                return root.right;
+            } else if (root.right == null) {
+                return root.left;
+            } else {
+                // Node with two children
+                TreeNode minNode = findMin(root.right);
+                root.val = minNode.val;
+                root.right = deleteNode(root.right, minNode.val);
+            }
+        }
+        return root;
+    }
+
+    private TreeNode findMin(TreeNode node) {
+        while (node.left != null) {
+            node = node.left;
+        }
+        return node;
+    }
+
+    public static void main(String[] args) {
+        // Example usage:
+        TreeNode root = new TreeNode(5);
+        root.left = new TreeNode(3);
+        root.right = new TreeNode(6);
+        root.left.left = new TreeNode(2);
+        root.left.right = new TreeNode(4);
+        root.right.right = new TreeNode(7);
+
+        Solution solution = new Solution();
+        root = solution.deleteNode(root, 3);
+
+        // Output the new tree values (in-order)
+        printInOrder(root);
+    }
+
+    private static void printInOrder(TreeNode root) {
+        if (root == null) {
+            return;
+        }
+        printInOrder(root.left);
+        System.out.print(root.val + " ");
+        printInOrder(root.right);
+    }
+}
+```
+
+### 700. Search in a Binary Search Tree
+```java
+public class Solution {
+    public TreeNode searchBST(TreeNode root, int val) {
+        if (root == null || root.val == val) {
+            return root;
+        }
+        if (val < root.val) {
+            return searchBST(root.left, val);
+        } else {
+            return searchBST(root.right, val);
+        }
+    }
+
+    public static void main(String[] args) {
+        // Example usage:
+        TreeNode root = new TreeNode(4);
+        root.left = new TreeNode(2);
+        root.right = new TreeNode(7);
+        root.left.left = new TreeNode(1);
+        root.left.right = new TreeNode(3);
+
+        Solution solution = new Solution();
+        TreeNode result = solution.searchBST(root, 2);
+
+        // Output the result
+        printInOrder(result);
+    }
+
+    private static void printInOrder(TreeNode root) {
+        if (root == null) {
+            return;
+        }
+        printInOrder(root.left);
+        System.out.print(root.val + " ");
+        printInOrder(root.right);
+    }
+}
+```
+
+### 701. Insert into a Binary Search Tree
+```java
+public class Solution {
+    public TreeNode insertIntoBST(TreeNode root, int val) {
+        if (root == null) {
+            return new TreeNode(val);
+        }
+        if (val < root.val) {
+            root.left = insertIntoBST(root.left, val);
+        } else {
+            root.right = insertIntoBST(root.right, val);
+        }
+        return root;
+    }
+
+    public static void main(String[] args) {
+        // Example usage:
+        TreeNode root = new TreeNode(4);
+        root.left = new TreeNode(2);
+        root.right = new TreeNode(7);
+        root.left.left = new TreeNode(1);
+        root.left.right = new TreeNode(3);
+
+        Solution solution = new Solution();
+        root = solution.insertIntoBST(root, 5);
+
+        // Output the new tree values (in-order)
+        printInOrder(root);
+    }
+
+    private static void printInOrder(TreeNode root) {
+        if (root == null) {
+            return;
+        }
+        printInOrder(root.left);
+        System.out.print(root.val + " ");
+        printInOrder(root.right);
+    }
+}
+```
+
+### 98. Validate Binary Search Tree
+```java
+public class Solution {
+    public boolean isValidBST(TreeNode root) {
+        return isValidBST(root, null, null);
+    }
+
+    private boolean isValidBST(TreeNode node, Integer lower, Integer upper) {
+        if (node == null) {
+            return true;
+        }
+        int val = node.val;
+        if (lower != null && val <= lower) {
+            return false;
+        }
+        if (upper != null && val >= upper) {
+            return false;
+        }
+        if (!isValidBST(node.right, val, upper)) {
+            return false;
+        }
+        if (!isValidBST(node.left, lower, val)) {
+            return false;
+        }
+        return true;
+    }
+
+    public static void main(String[] args) {
+        // Example usage:
+        TreeNode root = new TreeNode(2);
+        root.left = new TreeNode(1);
+        root.right = new TreeNode(3);
+
+        Solution solution = new Solution();
+        boolean isValid = solution.isValidBST(root);
+        System.out.println("Is valid BST: " + isValid);  // Output should be true
+    }
+}
+```
+
+### 95. Unique Binary Search Trees II
+```java
+public class Solution {
+    public int numTrees(int n) {
+        int[] dp = new int[n + 1];
+        dp[0] = 1;
+        dp[1] = 1;
+
+        for (int i = 2; i <= n; i++) {
+            for (int j = 1; j <= i; j++) {
+                dp[i] += dp[j - 1] * dp[i - j];
+            }
+        }
+
+        return dp[n];
+    }
+
+    public static void main(String[] args) {
+        Solution solution = new Solution();
+        int n = 3;  // Example input
+        int result = solution.numTrees(n);
+        System.out.println("Number of unique BSTs with " + n + " nodes: " + result);  // Output should be 5
+    }
+}
+```
+
+### 96. Unique Binary Search Trees
+```java
+import java.util.ArrayList;
+import java.util.List;
+
+class TreeNode {
+    int val;
+    TreeNode left;
+    TreeNode right;
+    TreeNode(int x) { val = x; }
+}
+
+public class Solution {
+    public List<TreeNode> generateTrees(int n) {
+        if (n == 0) {
+            return new ArrayList<>();
+        }
+        return generateTrees(1, n);
+    }
+
+    private List<TreeNode> generateTrees(int start, int end) {
+        List<TreeNode> allTrees = new ArrayList<>();
+        if (start > end) {
+            allTrees.add(null);
+            return allTrees;
+        }
+
+        for (int i = start; i <= end; i++) {
+            List<TreeNode> leftTrees = generateTrees(start, i - 1);
+            List<TreeNode> rightTrees = generateTrees(i + 1, end);
+
+            for (TreeNode left : leftTrees) {
+                for (TreeNode right : rightTrees) {
+                    TreeNode currentNode = new TreeNode(i);
+                    currentNode.left = left;
+                    currentNode.right = right;
+                    allTrees.add(currentNode);
+                }
+            }
+        }
+        return allTrees;
+    }
+
+    public static void main(String[] args) {
+        Solution solution = new Solution();
+        int n = 3;  // Example input
+        List<TreeNode> result = solution.generateTrees(n);
+        System.out.println("Unique BSTs with " + n + " nodes: " + result.size());
+        
+        // Print all unique BSTs
+        for (TreeNode root : result) {
+            printTree(root);
+            System.out.println();
+        }
+    }
+
+    private static void printTree(TreeNode root) {
+        if (root == null) {
+            System.out.print("null ");
+            return;
+        }
+        System.out.print(root.val + " ");
+        printTree(root.left);
+        printTree(root.right);
+    }
+}
+```
+
+### 1644. Lowest Common Ancestor of a Binary Tree II
+```java
+class TreeNode {
+    int val;
+    TreeNode left;
+    TreeNode right;
+    TreeNode(int x) { val = x; }
+}
+
+public class Solution {
+    private boolean foundP = false;
+    private boolean foundQ = false;
+
+    public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
+        TreeNode lca = findLCA(root, p, q);
+        if (foundP && foundQ) {
+            return lca;
+        }
+        return null;
+    }
+
+    private TreeNode findLCA(TreeNode root, TreeNode p, TreeNode q) {
+        if (root == null) {
+            return null;
+        }
+
+        TreeNode left = findLCA(root.left, p, q);
+        TreeNode right = findLCA(root.right, p, q);
+
+        if (root == p) {
+            foundP = true;
+            return root;
+        }
+
+        if (root == q) {
+            foundQ = true;
+            return root;
+        }
+
+        if (left != null && right != null) {
+            return root;
+        }
+        return left != null ? left : right;
+    }
+
+    public static void main(String[] args) {
+        // Example usage:
+        TreeNode root = new TreeNode(3);
+        root.left = new TreeNode(5);
+        root.right = new TreeNode(1);
+        root.left.left = new TreeNode(6);
+        root.left.right = new TreeNode(2);
+        root.right.left = new TreeNode(0);
+        root.right.right = new TreeNode(8);
+
+        Solution solution = new Solution();
+        TreeNode p = root.left; // Node 5
+        TreeNode q = root.right; // Node 1
+
+        TreeNode lca = solution.lowestCommonAncestor(root, p, q);
+        System.out.println("LCA: " + (lca != null ? lca.val : "null"));
+    }
+}
+```
+
+### 1650. Lowest Common Ancestor of a Binary Tree III
+```java
+class Node {
+    public int val;
+    public Node left;
+    public Node right;
+    public Node parent;
+}
+
+public class Solution {
+    public Node lowestCommonAncestor(Node p, Node q) {
+        Node a = p, b = q;
+        while (a != b) {
+            a = (a == null) ? q : a.parent;
+            b = (b == null) ? p : b.parent;
+        }
+        return a;
+    }
+
+    public static void main(String[] args) {
+        // Example usage:
+        Node root = new Node();
+        root.val = 3;
+        Node node5 = new Node();
+        node5.val = 5;
+        Node node1 = new Node();
+        node1.val = 1;
+        root.left = node5;
+        root.right = node1;
+        node5.parent = root;
+        node1.parent = root;
+
+        Solution solution = new Solution();
+        Node lca = solution.lowestCommonAncestor(node5, node1);
+        System.out.println("LCA: " + (lca != null ? lca.val : "null"));
+    }
+}
+```
+
+### 1676. Lowest Common Ancestor of a Binary Tree IV
+```java
+import java.util.HashSet;
+import java.util.Set;
+
+public class Solution {
+    public TreeNode lowestCommonAncestor(TreeNode root, TreeNode[] nodes) {
+        Set<TreeNode> nodeSet = new HashSet<>();
+        for (TreeNode node : nodes) {
+            nodeSet.add(node);
+        }
+        return findLCA(root, nodeSet);
+    }
+
+    private TreeNode findLCA(TreeNode root, Set<TreeNode> nodeSet) {
+        if (root == null || nodeSet.contains(root)) {
+            return root;
+        }
+
+        TreeNode left = findLCA(root.left, nodeSet);
+        TreeNode right = findLCA(root.right, nodeSet);
+
+        if (left != null && right != null) {
+            return root;
+        }
+        return left != null ? left : right;
+    }
+
+    public static void main(String[] args) {
+        // Example usage:
+        TreeNode root = new TreeNode(3);
+        root.left = new TreeNode(5);
+        root.right = new TreeNode(1);
+        root.left.left = new TreeNode(6);
+        root.left.right = new TreeNode(2);
+        root.right.left = new TreeNode(0);
+        root.right.right = new TreeNode(8);
+
+        TreeNode[] nodes = {root.left, root.right}; // Nodes 5 and 1
+
+        Solution solution = new Solution();
+        TreeNode lca = solution.lowestCommonAncestor(root, nodes);
+        System.out.println("LCA: " + (lca != null ? lca.val : "null"));
+    }
+}
+```
+
+### 235. Lowest Common Ancestor of a Binary Search Tree
+```java
+class TreeNode {
+    int val;
+    TreeNode left;
+    TreeNode right;
+    TreeNode(int x) { val = x; }
+}
+
+public class Solution {
+    public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
+        while (root != null) {
+            if (p.val < root.val && q.val < root.val) {
+                root = root.left;
+            } else if (p.val > root.val && q.val > root.val) {
+                root = root.right;
+            } else {
+                return root;
+            }
+        }
+        return null;
+    }
+
+    public static void main(String[] args) {
+        // Example usage:
+        TreeNode root = new TreeNode(6);
+        root.left = new TreeNode(2);
+        root.right = new TreeNode(8);
+        root.left.left = new TreeNode(0);
+        root.left.right = new TreeNode(4);
+        root.right.left = new TreeNode(7);
+        root.right.right = new TreeNode(9);
+        root.left.right.left = new TreeNode(3);
+        root.left.right.right = new TreeNode(5);
+
+        Solution solution = new Solution();
+        TreeNode p = root.left;  // Node 2
+        TreeNode q = root.left.right;  // Node 4
+
+        TreeNode lca = solution.lowestCommonAncestor(root, p, q);
+        System.out.println("LCA: " + (lca != null ? lca.val : "null"));  // Output should be 2
+    }
+}
+```
+
+### 236. Lowest Common Ancestor of a Binary Tree
+```java
+public class Solution {
+    public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
+        if (root == null || root == p || root == q) {
+            return root;
+        }
+
+        TreeNode left = lowestCommonAncestor(root.left, p, q);
+        TreeNode right = lowestCommonAncestor(root.right, p, q);
+
+        if (left != null && right != null) {
+            return root;
+        }
+
+        return left != null ? left : right;
+    }
+
+    public static void main(String[] args) {
+        // Example usage:
+        TreeNode root = new TreeNode(3);
+        root.left = new TreeNode(5);
+        root.right = new TreeNode(1);
+        root.left.left = new TreeNode(6);
+        root.left.right = new TreeNode(2);
+        root.right.left = new TreeNode(0);
+        root.right.right = new TreeNode(8);
+        root.left.right.left = new TreeNode(7);
+        root.left.right.right = new TreeNode(4);
+
+        Solution solution = new Solution();
+        TreeNode p = root.left;  // Node 5
+        TreeNode q = root.left.right.right;  // Node 4
+
+        TreeNode lca = solution.lowestCommonAncestor(root, p, q);
+        System.out.println("LCA: " + (lca != null ? lca.val : "null"));  // Output should be 5
+    }
+}
+```
+
+### LCR 193. 二叉搜索树的最近公共祖先
+```java
+class TreeNode {
+    int val;
+    TreeNode left;
+    TreeNode right;
+    TreeNode(int x) { val = x; }
+}
+
+public class Solution {
+    public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
+        while (root != null) {
+            if (p.val < root.val && q.val < root.val) {
+                root = root.left;
+            } else if (p.val > root.val && q.val > root.val) {
+                root = root.right;
+            } else {
+                return root;
+            }
+        }
+        return null;
+    }
+
+    public static void main(String[] args) {
+        // Example usage:
+        TreeNode root = new TreeNode(6);
+        root.left = new TreeNode(2);
+        root.right = new TreeNode(8);
+        root.left.left = new TreeNode(0);
+        root.left.right = new TreeNode(4);
+        root.right.left = new TreeNode(7);
+        root.right.right = new TreeNode(9);
+        root.left.right.left = new TreeNode(3);
+        root.left.right.right = new TreeNode(5);
+
+        Solution solution = new Solution();
+        TreeNode p = root.left;  // Node 2
+        TreeNode q = root.left.right;  // Node 4
+
+        TreeNode lca = solution.lowestCommonAncestor(root, p, q);
+        System.out.println("LCA: " + (lca != null ? lca.val : "null"));  // Output should be 2
+    }
+}
+```
+### LCR 194. 二叉树的最近公共祖先
+```java
+public class Solution {
+    public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
+        if (root == null || root == p || root == q) {
+            return root;
+        }
+
+        TreeNode left = lowestCommonAncestor(root.left, p, q);
+        TreeNode right = lowestCommonAncestor(root.right, p, q);
+
+        if (left != null && right != null) {
+            return root;
+        }
+
+        return left != null ? left : right;
+    }
+
+    public static void main(String[] args) {
+        // Example usage:
+        TreeNode root = new TreeNode(3);
+        root.left = new TreeNode(5);
+        root.right = new TreeNode(1);
+        root.left.left = new TreeNode(6);
+        root.left.right = new TreeNode(2);
+        root.right.left = new TreeNode(0);
+        root.right.right = new TreeNode(8);
+        root.left.right.left = new TreeNode(7);
+        root.left.right.right = new TreeNode(4);
+
+        Solution solution = new Solution();
+        TreeNode p = root.left;  // Node 5
+        TreeNode q = root.left.right.right;  // Node 4
+
+        TreeNode lca = solution.lowestCommonAncestor(root, p, q);
+        System.out.println("LCA: " + (lca != null ? lca.val : "null"));  // Output should be 5
+    }
+}
+```
+###  
+```java
+
+```
+
+### 
+```java
+
+```
 
 
 
