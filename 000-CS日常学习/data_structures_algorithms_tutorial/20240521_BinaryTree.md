@@ -587,7 +587,9 @@ public class Codec {
     }
 }
 ```
-
+/**
+** 20240524
+**/
 ### 11. Diameter of Binary Tree  LC543
 ```java
 public class Solution {
@@ -631,3 +633,280 @@ public class Solution {
     }
 }
 ```
+### Problem 114: Flatten Binary Tree to Linked List
+```java
+class TreeNode {
+    int val;
+    TreeNode left;
+    TreeNode right;
+    TreeNode (int x) {val = x;}
+}
+
+public class Solution {
+
+    private void flatten(TreeNode root) {
+        if (root == null) return;
+
+        flatten(root.left);
+        flatten(root.right);
+
+        TreeNode left = null;
+        TreeNode right = root.left;
+
+        TreeNode curr = root;
+        while (curr.right != null) {
+            curr = curr.right;
+        }
+
+        curr.right = right;
+    }
+}
+```
+
+### Problem 116: Populating Next Right Pointers in Each Node
+```java
+public class Solution {
+
+    public Node connect(Node root) {
+        if (root == null) return;
+
+        Queue<Node> queue = new LinkedList<>();
+        queue.add(root);
+
+        while (!queue.isEmpty()) {
+            int size = queue.size();
+            Node prev = null;
+
+            for (int i = 0; i < size; i++) {
+                Node curr = queue.poll();
+
+                if (prev != null) prev.next = curr;
+                prev = curr;
+
+                if (curr.left != null) queue.add(curr.left);
+                if (curr.right != null) queue.add(curr.right);
+            }
+        }
+
+        return root;
+    }
+
+    private static void printNextPointers(Node root) {
+        Node levelStart = root;
+
+        while (levelStart != null) {
+            Node curr = levelStart;
+            while (curr != null) {
+                System.out.print(curr.val + "->");
+                curr = curr.next;
+            }
+        }
+        System.out.print("null");
+        levelStart = levelStart.left;
+    }
+}
+```
+
+### Problem 226: Invert Binary Tree
+```java
+public class Solution {
+
+    public TreeNode invertTree(TreeNode root) {
+        if (root == null) return null;
+
+        TreeNode left = invertTree(root.left);
+        TreeNode right = invertTree(root.right);
+
+        root.left = right;
+        root.right = left;
+
+        return root;
+    }
+}
+```
+
+### Problem: 剑指 Offer 07. 重建二叉树
+```java
+
+```
+
+### Problem: 654. Maximum Binary Tree
+```java
+public class Solution {
+    private Map<Integer, Integer> inorderMap;
+
+    public TreeNode buildTree(int[] preorder, int[] inorder) {
+        inorderMap = new HashMap<>();
+        for (int i = 0; i < inorder.length; i++) {
+            inorderMap.put(inorder[i], i);
+        }
+        return buildTreeHelper(preorder, 0, preorder.length - 1, 0, inorder.length - 1);
+    }
+
+    private TreeNode buildTreeHelper(int[] preorder, int preStart, int preEnd, int inStart, int inEnd) {
+        if (preStart > preEnd || inStart > inEnd) {
+            return null;
+        }
+
+        int rootVal = preorder[preStart];
+        TreeNode root = new TreeNode(rootVal);
+        int leftSize = inorderMap.get(rootVal) - inStart;
+
+        root.left = buildTreeHelper(preorder, preStart + 1, preStart + leftSize, inStart, inorderMap.get(rootVal) - 1);
+        root.right = buildTreeHelper(preorder, preStart + leftSize + 1, preEnd, inorderMap.get(rootVal) + 1, inEnd);
+
+        return root;
+    }
+}
+```
+
+### Problem: 654. Maximum Binary Tree
+```java
+class TreeNode {
+    int val;
+    TreeNode left;
+    TreeNode right;
+    TreeNode(int x) { val = x; }
+}
+
+public class Solution {
+    public TreeNode constructMaximumBinaryTree(int[] nums) {
+        return buildTree(nums, 0, nums.length - 1);
+    }
+
+    private TreeNode buildTree(int[] nums, int left, int right) {
+        if (left > right) {
+            return null;
+        }
+
+        int maxIndex = findMaxIndex(nums, left, right);
+        TreeNode root = new TreeNode(nums[maxIndex]);
+
+        root.left = buildTree(nums, left, maxIndex - 1);
+        root.right = buildTree(nums, maxIndex + 1, right);
+
+        return root;
+    }
+
+    private int findMaxIndex(int[] nums, int left, int right) {
+        int maxIndex = left;
+        for (int i = left + 1; i <= right; i++) {
+            if (nums[i] > nums[maxIndex]) {
+                maxIndex = i;
+            }
+        }
+        return maxIndex;
+    }
+
+    public static void main(String[] args) {
+        // Example usage:
+        int[] nums = {3, 2, 1, 6, 0, 5};
+
+        Solution solution = new Solution();
+        TreeNode root = solution.constructMaximumBinaryTree(nums);
+
+        // Output the constructed tree (inorder traversal)
+        printInOrder(root);
+    }
+
+    private static void printInOrder(TreeNode root) {
+        if (root == null) {
+            return;
+        }
+        printInOrder(root.left);
+        System.out.print(root.val + " ");
+        printInOrder(root.right);
+    }
+}
+```
+
+### 652. Find Duplicate Subtrees
+```java
+import java.util.*;
+
+public class Solution {
+    private Map<String, Integer> subtreeMap;
+    private List<TreeNode> duplicates;
+
+    public List<TreeNode> findDuplicateSubtrees(TreeNode root) {
+        subtreeMap = new HashMap<>();
+        duplicates = new ArrayList<>();
+        serializeTree(root);
+        return duplicates;
+    }
+
+    private String serializeTree(TreeNode node) {
+        if (node == null) {
+            return "#"; // A marker for null nodes
+        }
+
+        String serialized = node.val + "," + serializeTree(node.left) + "," + serializeTree(node.right);
+
+        subtreeMap.put(serialized, subtreeMap.getOrDefault(serialized, 0) + 1);
+
+        if (subtreeMap.get(serialized) == 2) {
+            duplicates.add(node);
+        }
+
+        return serialized;
+    }
+
+    public static void main(String[] args) {
+        // Example usage:
+        TreeNode root = new TreeNode(1);
+        root.left = new TreeNode(2);
+        root.right = new TreeNode(3);
+        root.left.left = new TreeNode(4);
+        root.right.left = new TreeNode(2);
+        root.right.left.left = new TreeNode(4);
+        root.right.right = new TreeNode(4);
+
+        Solution solution = new Solution();
+        List<TreeNode> result = solution.findDuplicateSubtrees(root);
+
+        // Output the duplicate subtrees' root values
+        for (TreeNode node : result) {
+            System.out.println(node.val);
+        }
+    }
+}
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
