@@ -1,0 +1,86 @@
+// 双指针： 寻找重复数字
+class Solution {
+          public int findDuplicate(int[] nums) {
+                    int slow = 0;
+                    int fast = 0;
+
+                    do {
+                              slow += 1;
+                              if (fast == nums.length - 2) fast = 0;
+                              else fast += 2;
+                    } while (nums[slow] != nums[fast]);
+
+                    slow = 0;
+                    while (fast != nums.length - 1) {
+                              slow += 1;
+                              fast += 1;
+                    }
+
+                    return nums[slow];                 
+          }
+}
+
+
+// 141 判断链表是否有环
+class Solution {
+
+          class ListNode {
+                    ListNode next;
+                    int val;
+                    ListNode (int val) {
+                              this.val = val;
+                              this.next = null;
+                    }
+          }
+
+          public boolean isCircle(ListNode head) {
+                    if (head == null || head.next == null) {
+                              return false;
+                    }
+
+                    ListNode slow = head;
+                    ListNode fast = slow.next;
+
+                    while (slow.val != fast.val) {
+                              if (fast.next == null || fast.next == null) return false;
+                              slow = slow.next;
+                              fast = fast.next.next;
+                    }
+
+                    return true;
+          }
+}
+
+// 142. 环形链表 II
+class Solution {
+          class ListNode {
+                    int val;
+                    ListNode next;
+                    ListNode (int val) {
+                              this.val = val;
+                              this.next = null;
+                    }
+          }
+
+          public ListNode findCircle (ListNode head) {
+                    if (head == null || head.next == null) return null;
+
+                    ListNode slow = head;
+                    ListNode fast = slow.next;
+
+                    do {
+                              if (fast == null || fast.next == null) return null;
+                              slow = slow.next;
+                              fast = fast.next.next;
+                    } while (slow != fast);
+
+                    slow = head;
+                    while (fast != slow) {
+                              fast = fast.next;
+                              slow = slow.next;
+                    }
+
+                    return slow;
+          }
+}
+
