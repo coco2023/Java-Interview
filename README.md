@@ -6,4 +6,4 @@ Interview Links Collect: https://docs.google.com/presentation/d/1VycBXc4t-XAC4jw
 Mock Companies: https://docs.google.com/presentation/d/1ioxHIVp_V_A7AgNjtzx55oor8cZzZaTkOTTpjG3U4Gw/edit#slide=id.p
 
 # MindMap
-![](.img/20240603-Java%20Interview.png)
+![](.img/20240604-Java%20Interview.png)
