@@ -1,0 +1,68 @@
+// 373. Find K Pairs with Smallest Sums
+class Solution {
+    public List<List<Integer>> kSmallestPairs(int[] nums1, int[] nums2, int k) {
+        if (nums1 == null || nums2 == null)
+            return null;
+
+        // init a min-heap (priority queue); each element is an array of three integers: [nums1[i], nums2[j], j]
+        // lambda: the pair with the smallest sum is at the top of the heap.
+        PriorityQueue<int[]> queue = new PriorityQueue<>((a, b) -> a[0] + a[1] - b[0] - b[1]);
+        List<List<Integer>> res = new ArrayList<>();
+
+        // initializes the heap with pairs formed by the first element of nums2 and each element of nums1 up to k elements
+        for (int i = 0; i < nums1.length && i < k; i++) {
+            queue.offer(new int[] { nums1[i], nums2[0], 0 });
+        }
+
+        // The while loop runs until we have extracted k pairs or the heap is empty.
+        while (k > 0 && !queue.isEmpty()) {
+
+            int[] curr = queue.poll();  //  the smallest pair (based on sum) is removed from the heap
+            
+            // This pair is then added to the result list.
+            res.add(new ArrayList<>(Arrays.asList(curr[0], curr[1])));
+
+            // push the new pair that contains the next element in nums2 into the queue(with the current element of nums1)
+            // ensures that all potential pairs are considered
+            if (curr[2] + 1 < nums2.length) {
+                queue.offer(new int[] { curr[0], nums2[curr[2] + 1], curr[2] + 1 });
+            }
+            k--;
+        }
+        return res;
+
+    }
+}
+
+// 295. Find Median from Data Stream
+class MedianFinder {
+
+    private PriorityQueue<Integer> maxHeap;
+    private PriorityQueue<Integer> minHeap;
+
+    public MedianFinder() {
+        // This heap stores the smaller half of the numbers. 
+        // The largest number in this heap is at the root
+        maxHeap = new PriorityQueue<>(Collections.reverseOrder());  // converts the default min-heap into a max-heap
+        // This heap stores the larger half of the numbers. 
+        // The smallest number in this heap is at the root
+        minHeap = new PriorityQueue<>();
+    }
+
+    public void addNum(int num) {
+        maxHeap.offer(num);
+        minHeap.offer(maxHeap.poll());
+
+        if (minHeap.size() > maxHeap.size()) {
+            maxHeap.offer(minHeap.poll());
+        }
+    }
+
+    public double findMedian() {
+        if (maxHeap.size() == minHeap.size()) {
+            return (maxHeap.peek() + minHeap.peek()) / 2.0;
+        } else {
+            return maxHeap.peek();
+        }
+    }
+}

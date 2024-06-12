@@ -1,0 +1,301 @@
+// 212. Word Search II
+// Build a Trie: Insert all words into a Trie.
+// DFS Search: For each cell in the board, start a DFS search to find words in the Trie.
+// Backtracking: During DFS, mark cells as visited to avoid revisiting the same cell.
+
+import java.util.*;
+
+class Solution {
+    private Set<String> result = new HashSet<>();
+    private int[][] directions = {{0, 1}, {1, 0}, {0, -1}, {-1, 0}};
+    private TrieNode root;
+
+    public List<String> findWords(char[][] board, String[] words) {
+        root = new TrieNode();
+        for (String word : words) {
+            insert(word);
+        }
+
+        int m = board.length;
+        int n = board[0].length;
+
+        boolean[][] visited = new boolean[m][n];
+
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                if (root.containsKey(board[i][j])) {
+                    dfs(board, visited, i, j, root);
+                }
+            }
+        }
+
+        return new ArrayList<>(result);
+    }
+
+    private void insert(String word) {
+          TireNode node = root;
+          for (char ch : word.toCharArray()) {
+                    if (!node.containsKey(ch)) {
+                              node.put(chm new TrieNode());
+                    }
+                    node = node.get(ch);
+          }
+          node.setEnd();
+          node.setWord(word);
+    }
+
+    private void insert(String word) {
+        TrieNode node = root;
+        for (char ch : word.toCharArray()) {
+            if (!node.containsKey(ch)) {
+                node.put(ch, new TrieNode());
+            }
+            node = node.get(ch);
+        }
+        node.setEnd();
+        node.setWord(word);
+    }
+
+    private void dfs(char[][] board, boolean[][] visited, int i, int j, TrieNode node) {
+        if (node == null || !node.containsKey(board[i][j])) {
+            return;
+        }
+
+        char ch = board[i][j];
+        TrieNode nextNode = node.get(ch);
+
+        if (nextNode.isEnd()) {
+            result.add(nextNode.getWord());
+        }
+
+        visited[i][j] = true;
+
+        for (int[] direction : directions) {
+            int newRow = i + direction[0];
+            int newCol = j + direction[1];
+            if (newRow >= 0 && newRow < board.length && newCol >= 0 && newCol < board[0].length && !visited[newRow][newCol]) {
+                dfs(board, visited, newRow, newCol, nextNode);
+            }
+        }
+
+        visited[i][j] = false;
+    }
+
+    private class TrieNode {
+        private TrieNode[] links;
+        private final int R = 26;
+        private boolean isEnd;
+        private String word;
+
+        public TrieNode() {
+            links = new TrieNode[R];
+        }
+
+        public boolean containsKey(char ch) {
+            return links[ch - 'a'] != null;
+        }
+
+        public TrieNode get(char ch) {
+            return links[ch - 'a'];
+        }
+
+        public void put(char ch, TrieNode node) {
+            links[ch - 'a'] = node;
+        }
+
+        public void setEnd() {
+            isEnd = true;
+        }
+
+        public boolean isEnd() {
+            return isEnd;
+        }
+
+        public void setWord(String word) {
+            this.word = word;
+        }
+
+        public String getWord() {
+            return word;
+        }
+    }
+
+    public static void main(String[] args) {
+        Solution solution = new Solution();
+        char[][] board = {
+            {'o', 'a', 'a', 'n'},
+            {'e', 't', 'a', 'e'},
+            {'i', 'h', 'k', 'r'},
+            {'i', 'f', 'l', 'v'}
+        };
+        String[] words = {"oath", "pea", "eat", "rain"};
+        List<String> result = solution.findWords(board, words);
+        System.out.println(result);  // Output: ["eat", "oath"]
+    }
+}
+
+// 211. Design Add and Search Words Data Structure
+class WordDictionary {
+
+    private TrieNode root;
+    private TrieNode root;
+
+    public WordDictionary() {
+          root = new TrieNode();
+    }
+
+    public WordDictionary() {
+        root = new TrieNode();
+    }
+
+    public void addWord(String word) {
+        TrieNode node = root;
+        for (char ch : word.toCharArray()) {
+            if (!node.containsKey(ch)) {
+                node.put(ch, new TrieNode());
+            }
+            node = node.get(ch);
+        }
+        node.setEnd();
+    }
+
+    public boolean search(String word) {
+        return searchInNode(word, root);
+    }
+
+    private boolean searchInNode(String word, TrieNode node) {
+        for (int i = 0; i < word.length(); i++) {
+            char ch = word.charAt(i);
+            if (ch == '.') {
+                for (char x = 'a'; x <= 'z'; x++) {
+                    if (node.containsKey(x) && searchInNode(word.substring(i + 1), node.get(x))) {
+                        return true;
+                    }
+                }
+                return false;
+            } else {
+                if (!node.containsKey(ch)) {
+                    return false;
+                }
+                node = node.get(ch);
+            }
+        }
+        return node.isEnd();
+    }
+
+    private class TrieNode {
+
+        private TrieNode[] links;
+        private final int R = 26;
+        private boolean isEnd;
+
+        public TrieNode() {
+            links = new TrieNode[R];
+        }
+
+        public boolean containsKey(char ch) {
+            return links[ch - 'a'] != null;
+        }
+
+        public TrieNode get(char ch) {
+            return links[ch - 'a'];
+        }
+
+        public void put(char ch, TrieNode node) {
+            links[ch - 'a'] = node;
+        }
+
+        public void setEnd() {
+          isEnd = true;
+        }
+
+        public boolean isEnd() {
+            return isEnd;
+        }
+    }
+
+    public static void main(String[] args) {
+        WordDictionary wordDictionary = new WordDictionary();
+        wordDictionary.addWord("bad");
+        wordDictionary.addWord("dad");
+        wordDictionary.addWord("mad");
+        System.out.println(wordDictionary.search("pad")); // Output: false
+        System.out.println(wordDictionary.search("bad")); // Output: true
+        System.out.println(wordDictionary.search(".ad")); // Output: true
+        System.out.println(wordDictionary.search("b..")); // Output: true
+    }
+}
+
+// 208. Implement Trie (Prefix Tree)
+class Trie {
+
+    private TrieNode root;
+
+    public Trie() {
+        root = new TrieNode();
+    }
+
+    public void insert(String word) {
+        TrieNode node = root;
+        for (char ch : word.toCharArray()) {
+            if (!node.containsKey(ch)) {
+                node.put(ch, new TrieNode());
+            }
+            node = node.get(ch);
+        }
+        node.setEnd();
+    }
+
+    public boolean search(String word) {
+        TrieNode node = searchPrefix(word);
+        return node != null && node.isEnd();
+    }
+
+    public boolean startsWith(String prefix) {
+        TrieNode node = searchPrefix(prefix);
+        return node != null;
+    }
+
+    private TrieNode searchPrefix(String word) {
+        TrieNode node = root;
+        for (char ch : word.toCharArray()) {
+            if (node.containsKey(ch)) {
+                node = node.get(ch);
+            } else {
+                return null;
+            }
+        }
+        return node;
+    }
+
+    private class TrieNode {
+
+        private TrieNode[] links;
+        private final int R = 26;
+        private boolean isEnd;
+
+        public TrieNode() {
+            links = new TrieNode[R];
+        }
+
+        public boolean containsKey(char ch) {
+            return links[ch - 'a'] != null;
+        }
+
+        public TrieNode get(char ch) {
+            return links[ch - 'a'];
+        }
+
+        public void put(char ch, TrieNode node) {
+            links[ch - 'a'] = node;
+        }
+
+        public void setEnd() {
+            isEnd = true;
+        }
+
+        public boolean isEnd() {
+            return isEnd;
+        }
+    }
+}

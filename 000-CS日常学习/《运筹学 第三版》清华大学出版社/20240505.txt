@@ -278,3 +278,38 @@ public class Knapsack {
         System.out.println("The maximum value is " + knapsack(W, weight, value));
     }
 }
+
+// Kadane's Algorithm
+// Kadane's Algorithm的核心思想是通过动态规划记录当前位置的最大子数组和。如果当前位置的元素加上之前的最大子数组和比自身还大，则继续加，否则重新开始一个新的子数组。
+// 53. Maximum Subarray
+```
+class Solution {
+    public int maxSubArray(int[] nums) {
+        if (nums == null || nums.length == 0) {
+            throw new IllegalArgumentException("Input array is null or empty");
+        }
+
+        int currentSum = nums[0];
+        int maxSum = nums[0];
+
+        for (int i = 1; i < nums.length; i++) {
+            currentSum = Math.max(nums[i], currentSum + nums[i]);
+            maxSum = Math.max(maxSum, currentSum);
+        }
+
+        return maxSum;
+    }
+
+    public static void main(String[] args) {
+        Solution solution = new Solution();
+        int[] nums1 = {-2, 1, -3, 4, -1, 2, 1, -5, 4};
+        System.out.println(solution.maxSubArray(nums1));  // 输出：6
+
+        int[] nums2 = {1};
+        System.out.println(solution.maxSubArray(nums2));  // 输出：1
+
+        int[] nums3 = {5, 4, -1, 7, 8};
+        System.out.println(solution.maxSubArray(nums3));  // 输出：23
+    }
+}
+```
