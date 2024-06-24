@@ -66,3 +66,39 @@ class MedianFinder {
         }
     }
 }
+
+
+// 23. Merge k Sorted Lists
+class Solution {
+
+    public ListNode mergeKList(ListNode[] lists) {
+        PriorityQueue<ListNode> pq = new PriorityQueue<>(Comparator.comparingInt(node -> node.val));
+
+        for (ListNode node : lists) {
+            pq.offer(node);
+        }
+
+        ListNode dummy = new ListNode(0);
+        ListNode curr = dummy;
+
+        while (!pq.isEmpty()) {
+            ListNode node = pq.poll();
+
+            curr.next = node;
+            curr = curr.next;
+
+            if (node.next != null) {
+                pq.offer(node.next);
+            }
+        }
+    }
+}
+
+# LC Q
+
+1. **LeetCode 215 - Kth Largest Element in an Array**: Find the kth largest element in an unsorted array. You can use a min-heap of size `k` to efficiently solve this problem.
+2. **LeetCode 378 - Kth Smallest Element in a Sorted Matrix**: Given an n x n matrix where each of the rows and columns are sorted in ascending order, find the kth smallest element. A min-heap can be used to solve this problem efficiently.
+3. **LeetCode 973 - K Closest Points to Origin**: Given an array of points in the plane, find the `K` closest points to the origin. You can use a max-heap of size `K` to keep track of the closest points.
+4. **LeetCode 295 - Find Median from Data Stream**: You need to continuously find the median as numbers are added to a data stream. A combination of two heaps (a max-heap for the lower half and a min-heap for the upper half) can solve this problem efficiently.
+5. **LeetCode 347 - Top K Frequent Elements**: Given an integer array, return the `k` most frequent elements. A min-heap of size `k` can be used to keep track of the top `k` elements.
+6. **LeetCode 621 - Task Scheduler**: Given a list of tasks and a cooling interval, determine the minimum time needed to complete all tasks. A max-heap can be used to schedule tasks efficiently.
