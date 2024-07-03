@@ -1,0 +1,34 @@
+// String
+// 6. Zigzag Conversion
+class Solution {
+    public String convert(String s, int numRows) {
+        
+        int n = s.length();
+        if (n < numRows || numRows == 1) return s;
+        int size = numRows * 2 - 2;
+
+        int turns = n / size + (n % size == 0 ? 0 : 1);
+        System.out.println(turns);
+
+        int row = 0;
+        StringBuilder builder = new StringBuilder();
+        while (builder.length() < n && row < numRows) {
+            int turn = 0;
+            int index = 0;
+            while (turn <= turns && index < n) {
+                index = row + turn * size;
+
+                if (index >= n) break;
+                builder.append(s.charAt(index));
+                index += (numRows - row) * 2 - 2;
+                
+                if (row > 0 && row < numRows - 1 && index < n) {
+                    if (index < n) builder.append(s.charAt(index));
+                }                
+                turn++;
+            }
+            row++;
+        }
+        return builder.toString();
+    }
+}
