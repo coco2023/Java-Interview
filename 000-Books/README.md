@@ -10,17 +10,18 @@ cs courses: https://cs.illinois.edu/academics/courses
 2. New Systems and Networking Seminar: https://courses.engr.illinois.edu/cs591sn/sp2009/
 3. CS 533 Parallel Computer Architectures: https://courses.grainger.illinois.edu/cs533/sp2024/ 
 4. CS527: Topics in Software Engineering: https://lingming.cs.illinois.edu/courses/cs527-s23.html
-5. Course Number: 526 Title: Advanced Compiler Construction: https://charithm.web.illinois.edu/cs526/sp2024/ | https://charithm.web.illinois.edu/cs526/sp2022/
-6. CS 498: Cloud Computing Applications Syllabus: https://ws.engr.illinois.edu/sitemanager/getfile.asp?id=510#:~:text=Welcome%20to%20CS%20498%3A%20Cloud,most%20weeks%20a%20programming%20assignment. 
-7. CS598LMZ: Software Quality Assurance with Generative AI: https://lingming.cs.illinois.edu/courses/cs598lmz-s24.html
-8. CS527: Topics in Software Engineering: https://lingming.cs.illinois.edu/courses/cs527-s23.html
-9. Course Number: 523 Title: Advanced Operating Systems
-10. Course Number: 450  Title: Numerical Analysis: https://relate.cs.illinois.edu/course/cs450-s24/ | https://ws.engr.illinois.edu/sitemanager/getfile.asp?id=573
-11. Course Number: 411 Title: Database Systems: https://alawini.web.illinois.edu/teaching/database-systems/
-12. 《data_structures_algorithms_tutorial》: [link](/000-Books/coding_Books/data_structures_algorithms_tutorial.pdf)
-13. 《运筹学答案》http://223.99.192.31:8010/meol/common/script/preview/download_preview.jsp?fileid=3456873&resid=326172&lid=32156
-14. https://cs.illinois.edu/academics/courses/CS425
-15. https://courses.grainger.illinois.edu/ece428/sp2024/
+5. MIT 6.824: https://pdos.csail.mit.edu/6.824/schedule.html
+6. Course Number: 526 Title: Advanced Compiler Construction: https://charithm.web.illinois.edu/cs526/sp2024/ | https://charithm.web.illinois.edu/cs526/sp2022/
+7. CS 498: Cloud Computing Applications Syllabus: https://ws.engr.illinois.edu/sitemanager/getfile.asp?id=510#:~:text=Welcome%20to%20CS%20498%3A%20Cloud,most%20weeks%20a%20programming%20assignment. 
+8. CS598LMZ: Software Quality Assurance with Generative AI: https://lingming.cs.illinois.edu/courses/cs598lmz-s24.html
+9. CS527: Topics in Software Engineering: https://lingming.cs.illinois.edu/courses/cs527-s23.html
+10. Course Number: 523 Title: Advanced Operating Systems
+11. Course Number: 450  Title: Numerical Analysis: https://relate.cs.illinois.edu/course/cs450-s24/ | https://ws.engr.illinois.edu/sitemanager/getfile.asp?id=573
+12. Course Number: 411 Title: Database Systems: https://alawini.web.illinois.edu/teaching/database-systems/
+13. 《data_structures_algorithms_tutorial》: [link](/000-Books/coding_Books/data_structures_algorithms_tutorial.pdf)
+14. 《运筹学答案》http://223.99.192.31:8010/meol/common/script/preview/download_preview.jsp?fileid=3456873&resid=326172&lid=32156
+15. https://cs.illinois.edu/academics/courses/CS425
+16. https://courses.grainger.illinois.edu/ece428/sp2024/
 
 
 # Java books
