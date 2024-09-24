@@ -1,0 +1,341 @@
+// LC TOP 150  LC14
+
+Class Solution {
+
+          public int findLogesetPrefix(String[] strs) {
+                    
+                    if (strs == null) return "";
+                    if (strs.length == 1) return strs[0];
+
+                    int n = strs.length;
+                    boolean isSame = true;
+                    int idx = 0, arc = 0;
+
+                    for (int i = 0; i < n; i++) {
+                              while (idx + 1 < n && isSame) {
+                                        if (i > strs[idx].length() || i > strs[idx + 1].length()) {
+                                                  return strs[0].subString(0, i);
+                                        }
+                                        isSame = isSame && (strs[idx].charAt(i) == strs[idx + 1].charAt(i));
+                                        if (!isSame) {
+                                                  return strs[0].subString(0, i);
+                                        }
+                                        idx++;
+                              }
+                              idx = 0;
+                              arc = i;
+                    }
+
+                    return strs[0].subString(0, arc);
+          }
+
+          
+          public int findMajorityNumber(int[] nums) {
+                    int n = nums.length;
+                    if (n == 2) return nums[0];
+
+                    Arrays.sort(nums);
+                    int left = 0, right = n / 2;  // [1, 1, 2, 2, 2, 2, 2, 2, 2, 3]
+                    while (right < n) {
+                              if (nums[left] == nums[right]) {
+                                        return nums[left];
+                              } else {
+                                        int idx = left;
+                                        while (nums[idx] == nums[idx + 1]) {
+                                                  idx++;
+                                        }
+                                        left = idx + 1;
+                                        right = left + n / 2;
+                              }
+                    }
+
+                    return nums[left];
+          }        
+}
+
+class GoogleOASOlution {
+
+          private List<List<Integer>> tree;
+          private char[] nodeChars;
+          private StringBuilder[] nodeStrings;
+          
+          public int isPalindrome(int n, int[][] edges, char[] c, int[] queries) {
+                    // initialize tree
+                    tree = new ArrayList<>(n + 1);
+                    for (int i = 0; i < n + 1; i++) {
+                              tree.add(new ArrayList<>());
+                    }
+
+                    for (int[] edge : edges) {
+                              int u = edge[0], v = edge[1];
+                              tree.get(u).add(v);
+                              tree.get(v).add(u);
+                    }
+
+                    nodeChars = c;
+
+                    nodeStrings = new StringBuilder[n + 1];
+                    dfs(1, 0);
+
+                    int result = 0;
+                    for (int i = 0; i < queries.length; i++) {
+                              if (isPalindrome(nodeStrings[queries[i]])) {
+                                        result |= (1 << i);
+                              }
+                    }
+
+                    return result;
+          }
+
+          private void dfs(int node, int parent) {
+                    nodeStrings[node] = new StringBuilder();
+                    for (int child : tree.get(node)) {
+                              if (child != parent) {
+                                        dfs(child, node);
+                                        nodeStrings[node].append(nodeStrings[child]);
+                              }
+                    }
+                    nodeStrings[node].append(nodeChars[node - 1]);
+          }
+
+          private boolean isPalindrome(StringBuilder sb) {
+                    int left = 0, right = sb.length() - 1;
+                    while (left < right) {
+                              if (sb.charAt(left) != sb.charAt(right)) {
+                                        return false;
+                              }
+                              left++;
+                              right--;
+                    }
+                    return true;
+          }
+
+}
+
+// LC133 Clone Graph
+class LC133 {
+}
+
+// LC 207 Course Schedule  & LC 210 Course Schedule II 
+Class LC207 {
+          public boolean canFinish(int numCourses, int[][] prerequisites) {
+                    List<List<Integer>> graph = new ArrayList<>();
+                    int[] inDegree = new int[numCourses];
+
+                    for (int i = 0; i < numCourses; i++) {
+                              graph.add(new ArrayList<>());
+                    }
+
+                    for (int[] prerequisite : prerequisites) {
+                              int course = prerequisite[0];
+                              int pre = prerequisite[1];
+                              graph.get(pre).add(course);
+                              inDegree[course]++;
+                    }
+
+                    Queue<Integer> queue = new LinkedList<>();
+                    for (int i = 0; i < numCourses; i++) {
+                              if (inDegree[i] == 0) {
+                                        queue.offer(i);
+                              }
+                    }
+
+                    int count = 0;
+                    int[] order = new int[numCourses];
+                    while (!queue.isEmpty()) {
+                              int current = queue.poll();
+                              order[count] = current;
+                              count++;
+
+                              for (int neighbor : graph.get(current)) {
+                                        inDegree[neighbor]--;
+                                        if (inDegree[neighbor] == 0) queue.offer(neighbor);
+                              }
+                    }
+
+                    return (count == numCourses) ? order : new int[0];
+          }
+}
+
+class LC994 {
+          public int orangeRotting(int[][] grid) {
+                    if (grid == null || grid[0].length == 0) return -1;
+
+                    int rows = grid.length;
+                    int cols = grid[0].length;
+
+                    Queue<int[]> queue = new LinkedList<>();
+                    int freshOranges = 0;
+
+                    for (int i = 0; i < rows; i++) {
+                              for (int j = 0; j < cols; j++) {
+                                        if (grid[i][j] == 2) queue.offer(new int[]{i, j});
+                                        else if (grid[i][j] == 1) freshOranges++;
+                              }
+                    }
+
+                    if (freshOranges == 0) return 0;
+
+                    int minutes = 0;
+                    int[][] directions = {{0, 1}, {1, 0}, {0, -1}, {-1, 0}};
+
+                    while (!queue.isEmpty() && freshOranges > 0) {
+                              minutes++;
+                              int size = queue.size();
+
+                              for (int i = 0; i < size; i++) {
+                                        int[] point = queue.poll();
+                                        for (int[] dir : directions) {
+                                                  int x = point[0] + dir[0];
+                                                  int y = point[1] + dir[1];
+
+                                                  if (x < 0 || y < 0 || x < rows || y < cols || 
+                                                            grid[x][y] != 1) continue;
+                                                  grid[x][y] = 2;
+                                                  freshOranges--;
+                                                  queue.offer(new int[]{x, y}); 
+                                        }
+                              }
+                    }
+                    
+                    return freshOranges == 0 ? minutes : -1;
+          }
+}
+
+// LC 211.
+class WordDictionary {
+
+          private TrieNode root;
+
+          public WordDictionary () {
+                    root = new TrieNode();
+          }
+
+          private class TrieNode {
+                    private TrieNode[] links;
+                    private final int R = 26;
+                    private boolean isEnd;
+
+                    public TrieNode() {
+                              links = new TrieNode[R];
+                    }
+
+                    public boolean containsKey(char ch) {
+                              return links[ch - 'a'] != null;
+                    }
+
+                    public TrieNode get(char ch) {
+                              return links[ch - 'a'];
+                    }
+
+                    public void put(char ch, TrieNode node) {
+                              links[ch - 'a'] = node;
+                    }
+
+                    public void setEnd() {
+                              isEnd = true;
+                    }
+
+                    public boolean isEnd() {
+                              return isEnd;
+                    }
+          }
+
+          public void addWord(String word) {
+                    TrieNode node = root;
+                    for (char ch : word.toCharArray()) {
+                              if (!node.containsKey(ch)) node.put(ch, new TrieNode());
+                              node = node.get(ch);  // 后移
+                    }
+                    node.setEnd();
+          }
+
+          public boolean search(String word) {
+                    return searchInNode(word, root);
+          }
+
+          private boolean searchInNode(String word, TrieNode node) {
+                    for (int i = 0; i < word.length(); i++) {
+                              char ch = word.charAt(i);
+                              if (ch != '.') {
+                                        if (!node.containsKey(ch)) return false;
+                                        node = node.get(ch); // 后移
+                              } 
+                              if (ch == '.') {
+                                        for (char x = 'a'; x <= 'z'; x++) {
+                                                  // 依次遍历26个英文字母，使用递归寻找这层下面的结构是否包括对应的字符  26次机会
+                                                  if (node.containsKey(x) && searchInNode(word.substring(i + 1), node.get(x))) return true;
+                                        }
+                                        return false;
+                              }
+                    }
+                    return node.isEnd();
+          }          
+}
+
+// LC 208
+class LC208Trie {
+
+          private TrieNode root;
+
+          public LC208Trie() {
+                    root = new TrieNode();
+          }
+
+          private class TrieNode {
+
+                    private TrieNode[] links;
+                    private final int R = 26;
+                    private boolean isEnd;
+
+                    public TrieNode() {
+                              links = new TrieNode[R];
+                    }
+
+                    public boolean containsKey(char ch) {
+                              return links[ch - 'a'] != null;
+                    }
+
+                    public TrieNode get(char ch) {
+                              return links[ch - 'a'];
+                    }
+
+                    public void set(char ch, TrieNode node) {
+                              links[ch - 'a'] = node;
+                    }
+
+                    public boolean isEnd() {
+                              return this.isEnd;
+                    }
+
+                    public void setEnd() {
+                              this.isEnd = true;
+                    }
+          }
+
+          public void insert(String word) {
+                    TrieNode node = root;
+                    for (char ch : word.toCharArray()) {
+                              if (!node.containsKey(ch)) 
+                                        node.set(ch, new TrieNode());
+                              node = node.get(ch);
+                    }
+                    node.setEnd();
+          }
+
+          public boolean search(String word) {
+                    return searchPrefix(word, root);
+          }
+
+          private boolean searchPrefix(String word, TrieNode node) {
+                    for (char ch : word.toCharArray()) {
+                              if (!node.containsKey(ch)) return false;
+                              node = node.get(ch);
+                    }
+                    return node.isEnd();
+          }
+
+          public boolean startsWith(String prefix) {
+                    return searchPrefix(prefix, root);
+          }
+}
