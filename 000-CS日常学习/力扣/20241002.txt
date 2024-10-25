@@ -1,0 +1,130 @@
+class Solution {
+          public boolean canFinish(int numCourse, int[][] prerequest) {
+                    List<List<Integer>> graph = new ArrayList<>();
+                    int[] intDegree = new int[numCourse];
+
+                    // init graph
+                    for (int i = 0; i < numCourse; i++) {
+                              graph.add(new ArrayList<>()); 
+                    }
+                    
+                    // init intDegree
+                    for (int[] course : prerequest) {
+                              graph.get(course[1]).add(course[0]);
+                              intDegree[course[0]]++;
+                    }
+
+                    // BFS for checking the valid pre course
+                    Queue<Integer> queue = new LinkedList<>();
+                    // init the queue, put the courses that dont needs pre-course into the queue
+                    for (int i = 0; i < numCourse; i++) {
+                              if (intDegree[i] == 0) {
+                                        queue.offer(i);
+                              }
+                    }
+
+                    // count the 
+                    int count = 0;
+                    int[] order = new int[numCourse];
+                    while (!queue.isEmpty()) {
+                              int currCourse = queue.poll();
+                              order[count] = i;
+                              count++;
+
+                              for (int neighbor : graph.get(currCourse)) {
+                                        intDegree[neighbor]--;
+                                        if (intDegree[neighbor] == 0) {
+                                                  queue.offer(neighbor);
+                                        }
+
+                              }
+                    }
+
+                    return count == numCourse;
+          }
+}
+
+// V cmoputeIfAbsent(K key, Function<? super K, ? extends V> mappingFunction)
+class Solution {
+          public int findCheapestPrice(int n, int[][] flights, int src, int dst, int K) {
+
+                    int[] dist = new int[n];
+                    Arrays.fill(dist, Integer.MAX_VALUE);
+                    dist[src] = 0;
+
+                    for (int i = 0; i <= k; i++) {
+                              int[] tmp = Arrays.copyOf(dist, n);
+                              for (int[] fight : fights) {
+                                        int u = flight[0], v = flight[1], w = flight[2];
+                                        if (dist[u] != Integer.MAX_VALUE && dist[u] + w < tmp[v]) {
+                                                  tmp[v] = dist[u] + w;
+                                        }
+                              }
+                              dist = tmp;
+                    }
+
+                    return dist[dst] == Integer.MAX_VALUE ? -1 : dist[dst];
+          }
+}
+
+class Solution {
+          class UnionFind {
+                    private int[] parent;
+                    private int count;
+
+                    public UnionFind(int n) {
+                              parent = new int[n + 1];
+                              for (int i = 1; i <= n; i++) {
+                                        parent[i] = i;
+                              }
+                              count = n;
+                    }
+
+                    public find(int x) {
+                              if (parent[x] != x) {
+                                        parent[x] = find(parent[x]);
+                              }
+
+                              return parent[x];
+                    }
+
+                    public boolean union(int x, int y) {
+                              int rootX = find(x);
+                              int rootY = find(y);
+                              if (rootX == rootY) {
+                                        return false;
+                              }
+                              parent[rootX] = rootY;
+                              count--;
+                              return true;
+                    }
+
+                    public int getCount() {
+                              return count;
+                    }
+          }
+
+          public int minumCost(int N, int[][] connections) {
+                    // 按照建设成本升序排序
+                    Arrays.sort(connections, Comparator.comparingInt(a -> a[2]));
+
+                    UnionFind uf = new UnionFind(N);
+                    int totalCost = 0;
+
+                    for (int[] connection : connections) {
+                              // 尝试合并两个城市所在的集合
+                              if (uf.union(connection[0], connection[1])) {
+                                        totalCost += cost;
+                              }
+
+                              // 如果所有城市都连通，提前结束
+                              if (uf.getCount() == 1) {
+                                        return totalCost;
+                              }
+                    }
+
+                    // 检查是否所有城市都连通
+                    return uf.getCount() == 1 ? totalCost : -1;
+          }
+}
+
