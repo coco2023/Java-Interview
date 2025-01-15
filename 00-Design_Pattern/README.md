@@ -30,7 +30,9 @@ Data Access Object Pattern
 https://github.com/iluwatar/java-design-patterns/tree/master/dao
 
 
-
+# 单例模式 (Singleton Pattern)
+### **单例模式与 Immutable Class 的区别**
+[**单例模式与 Immutable Class 的区别**](/08-Core%20Java/README.md)
 
 
 
