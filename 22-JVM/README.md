@@ -1,8 +1,118 @@
 # 【Refer】
 1. ChatGPT: https://chatgpt.com/c/671c02db-c5e0-800d-a0d2-581aea4e304c
 2. ChatGPT: https://chatgpt.com/c/671c031f-ca3c-800d-9f10-08ac15ce1639
-   
-### JVM 主要组成部分
+
+# 通过代码实例学习JVM
+### **补充：JVM 内存分布表（带实际代码中的示例）**
+
+| **区域**       | **内容**                                                 | **是否共享**         | **代码示例中的变量/类/方法/实例**                                |
+|----------------|---------------------------------------------------------|---------------------|-------------------------------------------------------------|
+| **堆内存**      | 存储对象实例、Spring Bean（如 `Service`、`Repository`）。 | 是                  | `UserService`、`UserRepository`、`CacheManager` 单例实例        |
+| **方法区**      | 类的元信息（类的结构、方法、静态变量、常量池等）。         | 是                  | 类：`UserController`，方法：`getUserById()`，静态字段：`staticCache` |
+| **线程栈**      | 每个线程的局部变量和方法调用栈帧。                        | 否（线程独占）       | 局部变量：`id`，数据库查询结果：`User` 对象                      |
+| **本地方法栈**   | 调用 JNI（本地方法接口）时存储的本地方法调用信息。         | 否（线程独占）       | 假如调用 `System.gc()` 或底层数据库驱动接口                      |
+| **程序计数器**   | 当前线程正在执行的字节码指令地址。                         | 否（线程独占）       | JVM 内部使用，代码不可直接访问                                  |
+
+---
+
+### **结合代码中的具体示例**
+
+**1. Controller 层**
+```java
+@RestController
+@RequestMapping("/users")
+public class UserController {
+
+    @Autowired
+    private UserService userService; // 堆内存中的单例 Bean
+
+    @GetMapping("/{id}")
+    public User getUser(@PathVariable Long id) { // 线程栈中的局部变量
+        System.out.println("Controller 层线程：" + Thread.currentThread().getName());
+        return userService.getUserById(id); // 调用堆内存中的方法
+    }
+}
+```
+- **堆内存**：`UserService` 的实例。
+- **线程栈**：`id`（局部变量）。
+- **方法区**：`UserController` 类的元信息。
+
+---
+
+**2. Service 层**
+```java
+@Service
+public class UserService {
+
+    @Autowired
+    private UserRepository userRepository; // 堆内存中的单例 Bean
+
+    @Autowired
+    private CacheManager cacheManager; // 堆内存中的单例 Bean
+
+    public User getUserById(Long id) { // 方法区中的方法信息
+        System.out.println("Service 层线程：" + Thread.currentThread().getName());
+
+        // 从缓存中获取
+        Cache cache = cacheManager.getCache("users"); // 堆内存中的缓存实例
+        User user = cache.get(id, User.class); // 线程栈中的局部变量
+
+        if (user == null) {
+            user = userRepository.findById(id).orElse(null); // 数据库查询返回的结果存储在线程栈中
+            if (user != null) {
+                cache.put(id, user);
+            }
+        }
+
+        return user;
+    }
+}
+```
+- **堆内存**：`UserRepository`、`CacheManager`、`Cache`。
+- **线程栈**：局部变量 `user` 和 `id`。
+- **方法区**：`getUserById` 方法的元信息。
+
+---
+
+**3. Repository 层**
+```java
+@Repository
+public interface UserRepository extends JpaRepository<User, Long> {
+    // JPA 自动生成的方法
+}
+```
+- **堆内存**：Spring 为 `UserRepository` 创建的代理类。
+- **线程栈**：JPA 查询返回的 `User` 实例（线程独占）。
+- **方法区**：`findById` 方法的元信息。
+
+---
+
+**4. Config 层**
+```java
+@Configuration
+public class AppConfig {
+
+    @Bean
+    public CacheManager cacheManager() {
+        return new ConcurrentMapCacheManager("users"); // 堆内存中的单例实例
+    }
+}
+```
+- **堆内存**：`CacheManager` 单例实例。
+- **方法区**：`cacheManager` 方法元信息。
+- **线程栈**：方法执行时的临时变量（线程独占）。
+
+---
+
+### **总结协作关系**
+1. **线程栈中的变量**（如方法参数和局部变量）会引用堆内存中的共享对象（如单例 Bean）。
+2. **方法区**存储类的元信息和静态变量，为每个线程提供访问指令。
+3. **堆内存**中的实例（如 `UserService`、`CacheManager`）被多个线程共享，避免重复创建。
+4. 本地方法调用（如数据库驱动接口）会使用**本地方法栈**。
+
+通过这种分布和协作机制，Spring 实现了高效的资源管理和多线程支持。
+
+# JVM 主要组成部分
 
 JVM 的组成可以分为以下几部分：
 
