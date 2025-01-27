@@ -57,8 +57,10 @@ public class LoggerRunner implements Logger {
 
           @Override
           public void log(String message) {
-                    logCounter++;
-                    logList.add(new LogResponse(logCounter, message));
+                    synchronized (this) {
+                              logCounter++;
+                              logList.add(new LogResponse(logCounter, message));
+                    }
                     System.out.println("Logged: " + message);
           }
 
