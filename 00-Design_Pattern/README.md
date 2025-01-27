@@ -32,7 +32,7 @@ https://github.com/iluwatar/java-design-patterns/tree/master/dao
 
 # 单例模式 (Singleton Pattern)
 ### **单例模式与 Immutable Class 的区别**
-[**单例模式与 Immutable Class 的区别**](/08-Core%20Java/README.md)
+[**单例模式与 Immutable Class 的区别**](https://github.com/coco2023/Java-Interview/tree/main/08-Core%20Java#%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F-singleton-pattern)
 
 
 
