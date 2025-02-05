@@ -2,6 +2,10 @@
 1. ChatGPT: https://chatgpt.com/c/671c02db-c5e0-800d-a0d2-581aea4e304c
 2. ChatGPT: https://chatgpt.com/c/671c031f-ca3c-800d-9f10-08ac15ce1639
 
+# JVM_Practice
+`java -Xms20m -Xmx20m -XX:+HeapDumpOnOutOfMemoryError -Xlog:gc* HeapOOM`
+
+
 # 通过代码实例学习JVM
 ### **补充：JVM 内存分布表（带实际代码中的示例）**
 
